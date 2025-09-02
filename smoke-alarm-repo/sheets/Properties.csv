@@ -1,0 +1,2 @@
+PropertyID,ClientID,AddressLine1,AddressLine2,Suburb,Postcode,State,TenantName,TenantEmail,TenantPhone,AccessNotes,KeySafeCode,LastInspectionDate,NextDueDate,Status,Notes,CreatedAt,UpdatedAt
+P-0001,C-0001,12 Sample Rd,,Brunswick,3056,VIC,Jane Tenant,jane@example.com,0400 333 444,Dog on site,1234,2025-07-15,2026-07-15,Active,Keys at office,,

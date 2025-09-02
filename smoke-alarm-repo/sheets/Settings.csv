@@ -1,0 +1,18 @@
+Key,Value,Notes
+BUSINESS_NAME,Your Business Pty Ltd,Shown on reports and invoices
+BUSINESS_EMAIL,admin@yourbusiness.com,Used for outgoing emails
+BUSINESS_PHONE,+61 400 000 000,Used in footer
+BUSINESS_ADDRESS,1 High St, Melbourne VIC 3000,Invoice footer
+GST_RATE,0.00,Set 0.10 if GST registered
+PRICE_SERVICE_CENTS,12900,Annual check price in cents
+PRICE_ALARM_CENTS,4500,Replacement alarm price in cents
+SMS_PROVIDER,clicksend,clicksend or twilio
+CLICKSEND_USER,,ClickSend username
+CLICKSEND_KEY,,ClickSend API key
+TWILIO_SID,,Twilio SID
+TWILIO_AUTH_TOKEN,,Twilio token
+TWILIO_FROM,+61...,Your Twilio number
+STRIPE_SECRET_KEY,,sk_live_...
+STRIPE_SUCCESS_URL,https://example.com/success,Stripe success URL
+STRIPE_CANCEL_URL,https://example.com/cancel,Stripe cancel URL
+REPORTS_FOLDER_ID,,Drive folder ID to store PDFs

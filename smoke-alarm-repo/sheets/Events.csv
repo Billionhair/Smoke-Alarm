@@ -1,0 +1,2 @@
+EventID,Type,DateTime,PropertyID,ClientID,Channel,Direction,Subject,Message,RelatedId
+E-0001,Reminder,2026-07-01T09:00:00+10:00,P-0001,C-0001,SMS,outbound,Renewal due,Hi Sam, P-0001 due for annual check.,I-0001

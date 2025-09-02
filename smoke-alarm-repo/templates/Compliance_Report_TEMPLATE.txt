@@ -1,0 +1,37 @@
+Smoke Alarm Compliance Report
+Business: {{BUSINESS_NAME}}  Email: {{BUSINESS_EMAIL}}  Phone: {{BUSINESS_PHONE}}
+Address: {{BUSINESS_ADDRESS}}
+
+Client: {{CLIENT_NAME}}  Agency: {{CLIENT_BUSINESS}}
+Property: {{PROPERTY_ADDRESS_LINE1}} {{PROPERTY_ADDRESS_LINE2}}, {{PROPERTY_SUBURB}} {{PROPERTY_POSTCODE}} {{PROPERTY_STATE}}
+Tenant: {{TENANT_NAME}}  Phone: {{TENANT_PHONE}}  Email: {{TENANT_EMAIL}}
+Inspection ID: {{INSPECTION_ID}}  Property ID: {{PROPERTY_ID}}
+Inspection date: {{INSPECTION_DATE}}  Technician: {{TECHNICIAN}}
+
+Scope: Annual test and service of battery-powered photoelectric smoke alarms. Cleaning, functional test, battery replacement if required. No electrical work performed. Hardwired issues referred to a licensed electrician.
+
+Alarms assessed:
+{{#ALARMS}}
+- Location: {{LOCATION}}  Type: {{TYPE}}  Power: {{POWER_SOURCE}}  Brand/Model: {{BRAND}} {{MODEL}}
+  Install date: {{INSTALL_DATE}}  Expiry date: {{EXPIRY_DATE}}  Last service: {{LAST_SERVICE_DATE}}
+  Result: {{RESULT}}  Actions: {{ACTIONS}}
+{{/ALARMS}}
+
+Overall compliance status: {{COMPLIANCE_STATUS}}  Next due: {{NEXT_DUE_DATE}}
+
+Findings summary:
+{{FINDINGS_SUMMARY}}
+
+Actions taken today:
+- Batteries replaced: {{BATTERIES_REPLACED_COUNT}}
+- Alarms replaced: {{ALARMS_REPLACED_COUNT}}
+- Photos folder: {{PHOTOS_FOLDER_URL}}
+
+Notes and recommendations:
+{{NOTES}}
+
+Declaration:
+I confirm that the above checks were carried out in accordance with Victorian rental requirements for smoke alarm safety checks. This report does not constitute electrical work.
+
+Signature:
+{{TECHNICIAN}}    Date: {{INSPECTION_DATE}}
