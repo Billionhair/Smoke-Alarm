@@ -6,3 +6,6 @@ node_modules/
 .clasp.json
 clasp.json
 service_account.json
+
+# Ignore GUI lock file
+/gui/package-lock.json
