@@ -1,0 +1,75 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+TESTING - MEGA PROMPT
+Date: 2025-09-03
+
+Scope
+Establish unit, integration, and e2e tests with clear coverage gates and deterministic fixtures.
+
+Inheritance
+- Read ../core/Repo_Mega_Prompt.txt and ../core/World_Class_Blueprint.txt first.
+- Apply constraints, SLOs, and security rules. This prompt takes precedence where more specific.
+- Respect Google Sheets as the initial system of record and keep the path open for Postgres.
+
+Operating rules
+1) One PR at a time with unified diffs and exact commands. No prose beyond the required sections.
+2) Keep changes surgical and reversible. Include rollback notes if risky.
+3) No secrets in client or code. Use environment variables and Script Properties.
+4) Maintain ASCII only output.
+5) Stop after producing diffs and commands for this PR.
+
+Deliverables
+- pytest setup with coverage and fixtures for agent
+- Mock OSRM server or responses for integration tests
+- Playwright e2e tests for GUI core flows
+- Coverage reports in CI
+
+Task routing within this principle
+- Unit tests for pure logic
+- Integration tests for IO and adapters
+- E2E for user journeys
+
+PR plan
+- PR 1: Add pytest config and first unit tests for routing math and adapters
+- PR 2: Add integration tests with mock OSRM responses
+- PR 3: Add Playwright e2e tests for plan day, run visit, send invoice
+- PR 4: Add coverage gates to CI
+
+Acceptance gates
+- Tests pass locally and on CI
+- Coverage 80 percent lines and 70 percent branches
+- Deterministic fixtures, no live internet calls
+
+KPIs and budgets
+- CI green rate over 95 percent
+- Mean PR time to green under 10 minutes
+
+Risks and rollback
+- Flaky tests. Mitigate with retries and hermetic fixtures
+- Long CI. Mitigate with caching and parallelization
+
+Output format the agent must follow
+- Section A: PR title and rationale
+- Section B: Files changed list
+- Section C: Unified diff
+- Section D: Commands to apply and to run checks
+- Section E: Rollback steps
+- Section F: Acceptance checks to verify
+
+Defaults when information is missing
+- Choose best practice defaults from the core blueprint and prompts.
+- Prefer reversible changes. Provide options when in doubt.

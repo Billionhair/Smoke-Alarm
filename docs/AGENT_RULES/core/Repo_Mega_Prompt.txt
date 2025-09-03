@@ -1,0 +1,78 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+ULTRA HIGH CLARITY PROMPT FOR FULL REPO OPTIMISATION
+Repository
+- Name: Billionhair/Smoke-Alarm
+- URL: https://github.com/Billionhair/Smoke-Alarm
+
+Mission
+Turn this monorepo into a world class production product for a smoke alarm compliance business. Optimise every file, folder, and line from architecture down to tiny edits that add real value. Deliver a staged path that lands safely via small pull requests, ready to ship.
+
+Known components and context
+- agent: Python agent for routing, renewals, outreach, and invoicing
+- apps_script: Google Sheets bound Apps Script for reports, invoices, SMS, reminders
+- sheets: CSV tab schemas used to initialise Google Sheet tabs
+- templates: Google Doc templates for compliance report and invoice
+- .github workflows: CI for daily agent runs and Apps Script deployments
+- scripts: helper for clasp pushes to Apps Script
+- gui: placeholder for a lightweight operator console
+- workflows: extra automation definitions if present
+
+Stack baseline and target
+- Languages: Python and JavaScript TypeScript
+- Infra: Docker containers, GitHub Actions CI, Terraform later
+- Data: Google Sheets system of record initially, optional Postgres for scale
+- Routing: OSRM and Nominatim with migration to self hosted or paid provider for reliability
+- Payments: Stripe invoice or checkout integration
+- Messaging: email via Gmail API, SMS via provider like Twilio
+
+Operating rules
+1) Analyse the entire repo based on current contents. Show an inventory tree and language breakdown.
+2) No hand waving. Provide diffs, exact files, and commands for each change.
+3) Optimise by impact first. Stage work into small PRs that can land safely.
+4) Do not rewrite everything at once. Propose a surgical path then a deeper refactor plan.
+5) Justify every change with benefit, risk, and rollback.
+6) Assume no background tasks. Do all work in one pass.
+7) Use plain English. ASCII only.
+
+Deliverables
+A) Executive scorecard and one page plan
+B) Full repo inventory and risks
+C) Target architecture and ADRs
+D) Code standards per language, ready to run configs
+E) Test plan and high value tests
+F) Security hardening and SBOM
+G) Performance profile and improvements
+H) DevEx and local bootstrap scripts
+I) Docs suite and site
+J) CI CD as code
+K) Release and versioning policy
+L) Licensing and compliance
+M) 30 60 90 roadmap and PR plan with diffs
+N) Acceptance criteria and KPIs
+
+Repo specific acceptance rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial source of truth. Support migration to a database later.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and add TypeScript builds if useful.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output format policy
+Follow the 17 section structure. Include code blocks, diffs, and commands. Each subsection must be self contained.
+
+Now perform the work per the structure on this repository.

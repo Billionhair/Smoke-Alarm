@@ -1,0 +1,75 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+SECURITY - MEGA PROMPT
+Date: 2025-09-03
+
+Scope
+Implement least privilege, secret handling, input validation, sanitization, and auditing across agent, Apps Script, and GUI.
+
+Inheritance
+- Read ../core/Repo_Mega_Prompt.txt and ../core/World_Class_Blueprint.txt first.
+- Apply constraints, SLOs, and security rules. This prompt takes precedence where more specific.
+- Respect Google Sheets as the initial system of record and keep the path open for Postgres.
+
+Operating rules
+1) One PR at a time with unified diffs and exact commands. No prose beyond the required sections.
+2) Keep changes surgical and reversible. Include rollback notes if risky.
+3) No secrets in client or code. Use environment variables and Script Properties.
+4) Maintain ASCII only output.
+5) Stop after producing diffs and commands for this PR.
+
+Deliverables
+- Secret scanning and dependency pinning
+- CSP headers for GUI and HTML sanitization for templates
+- Minimized OAuth scopes and Script Properties for Apps Script
+- Audit logs for admin and data exports
+
+Task routing within this principle
+- Credential storage and rotation
+- Browser security headers and sanitization
+- Permissions and auditability
+
+PR plan
+- PR 1: Enable secret scanning and pin dependencies. Add Dependabot or Renovate
+- PR 2: Add CSP headers to gui and sanitize template HTML
+- PR 3: Tighten Apps Script scopes and move IDs to Script Properties
+- PR 4: Add audit log events for admin actions
+
+Acceptance gates
+- No secrets in client code
+- CSP enforced and no inline scripts
+- SAST and dependency scans pass on CI
+
+KPIs and budgets
+- Zero high severity findings in scans
+- Incident response doc linked in repo
+
+Risks and rollback
+- Breaking third party widgets due to CSP. Mitigate with allowed hosts only
+- Missed sanitization path. Mitigate with tests and reviews
+
+Output format the agent must follow
+- Section A: PR title and rationale
+- Section B: Files changed list
+- Section C: Unified diff
+- Section D: Commands to apply and to run checks
+- Section E: Rollback steps
+- Section F: Acceptance checks to verify
+
+Defaults when information is missing
+- Choose best practice defaults from the core blueprint and prompts.
+- Prefer reversible changes. Provide options when in doubt.

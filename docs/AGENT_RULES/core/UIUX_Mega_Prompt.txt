@@ -1,0 +1,238 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+SMOKE ALARM UI UX MEGA PROMPT
+Date: 2025-09-03
+Repository: Billionhair/Smoke-Alarm
+Scope: Build the most beautiful and effective GUI for this product. Backend to frontend. World class quality, speed, security, and usability. ASCII only.
+
+Context sources to embody
+- World Class Blueprint for this repo.
+- Ultra High Clarity Repo Prompt.
+Carry through all targets, SLOs, security, data model, PR plan, and acceptance rules from those documents. Where this prompt is more specific, this prompt takes precedence.
+
+Mission
+Design and implement a production grade operator console and customer facing views for a smoke alarm compliance business. The app must make route planning, visit execution, reporting, invoicing, renewals, and outreach effortless. It must look and feel like a top tier Silicon Valley product while remaining fast, accessible, and reliable on modest hardware and mobile browsers.
+
+Non functional targets
+- Availability: 99.9 percent monthly. Error budget 43.2 minutes.
+- Performance: p95 interactive under 2.0 s on median laptop and 4G. Time to first paint under 1.0 s with caching. Route plan draw time under 300 ms for 100 stops with cached geocodes.
+- Accessibility: WCAG 2.2 AA minimum.
+- Security: no secrets in client. Least privilege scopes. CSRF and XSS safe defaults.
+- Cost: build and deploy with caching and CDN. Avoid heavy libraries unless justified.
+- Data: Google Sheets is the initial system of record. Support future Postgres without breaking UI.
+
+Personas and core jobs
+- Field operator: plan the day, navigate routes, record visit outcomes, generate certificates.
+- Ops lead: assign work, review compliance status, send reminders, approve invoices.
+- Property manager client: view compliance status, download reports, pay invoices.
+- Owner optional: receive visit reports and pay online.
+
+Design principles
+- Clarity first. Single purpose per screen.
+- Obvious next action. Reduce clicks. Keyboard friendly.
+- Beautiful but restrained. High contrast. Soft elevation. Clean spacing.
+- State explicit. Empty, loading, success, and error states are designed, not default.
+- Mobile first responsive. Desktop grid for productivity.
+- Safe by design. Confirm destructive actions. Undo where possible.
+- Fast paths. Cache and prefetch. Optimistic UI for low risk updates.
+
+Brand and visual system
+- Design tokens: color, spacing, radius, typography, elevation. Export as tokens.ts and CSS variables.
+- Light and dark modes with auto switch. High contrast toggle.
+- Iconography: lucide icon set. Size 16, 20, 24 as standards.
+- Motion: subtle, meaningful. 120 to 200 ms default durations. Easing standard. Reduce motion respects user setting.
+- Copy style: clear, direct, action verbs. No jargon.
+
+Information architecture
+- Global app shell: top bar with search and quick actions, left nav with sections, right panel for details.
+- Sections: Dashboard, Schedule, Routes, Properties, Visits, Invoices, Templates, Messaging, Settings, Help.
+- Global search surfaces properties, visits, invoices, and addresses.
+
+Core screens and flows
+1) Day planner
+   - Calendar grid with drag and drop for jobs. Batch assign. Bulk SMS.
+   - Route builder: select stops, show route lines on map, reorder by drag, export to Google Maps.
+   - Stats: drive time, distance, jobs per tech.
+2) Route map view
+   - Map with cluster markers, color by priority, tooltip with address and next steps.
+   - Offline safe print list with QR codes for quick access.
+3) Visit execution
+   - Checklist for test steps. Photo upload. Replace unit action. Generate certificate PDF.
+   - One tap outcomes: pass, fail, replace, follow up.
+4) Compliance reports
+   - Render from template with placeholders. Preview and export PDF. Send to client.
+5) Renewals and outreach
+   - Smart lists for due soon, overdue, failed visits. Bulk email and SMS templates. Audit log.
+6) Invoices and payments
+   - Create invoice from visit batch. Stripe checkout link. Status and reminders.
+7) Settings
+   - Business info, staff, templates, pricing, API keys stored server side, not in client.
+
+Tech stack and architecture
+- Frontend: React with Vite and TypeScript. Tailwind for styling. shadcn ui for accessible components. Framer Motion for motion. React Query for data fetching and caching. Zod for validation. React Hook Form for forms. React Router for routes.
+- Mapping: Mapbox GL JS or MapLibre GL. Draw routes, clusters, and labels. Link to Google Maps for navigation. Cache tiles and geocodes.
+- State: server state via React Query. Local UI state with Zustand or context when small.
+- Backend for UI needs: lightweight Node API behind the console to broker to Apps Script when needed, or direct Apps Script web app endpoints where possible. All secrets live on server or Apps Script properties, never in client.
+- Data access: repository layer that reads and writes Google Sheets via Apps Script or API. Same shape as future Postgres models so the UI does not change later.
+- Auth: Google or email link auth for staff. Session cookies with httpOnly and sameSite strict. CSRF token on state changing requests.
+- Telemetry: analytics events for core funnel and feature adoption. Respect privacy and consent.
+
+Directory layout
+gui/
+  app/
+    routes/
+    screens/
+    components/
+    features/
+    hooks/
+    lib/
+    styles/
+    assets/
+  public/
+  tests/
+  e2e/
+  package.json
+  vite.config.ts
+  index.html
+  tsconfig.json
+  tailwind.config.ts
+  postcss.config.js
+
+Design system tokens example
+tokens.ts
+export const tokens = {
+  color: {
+    bg: "#0B0F14",
+    bgAlt: "#0F1520",
+    text: "#E6EDF3",
+    textMuted: "#AAB2BD",
+    primary: "#4DA3FF",
+    success: "#22C55E",
+    warn: "#F59E0B",
+    danger: "#EF4444"
+  },
+  radius: { sm: 6, md: 10, lg: 16 },
+  spacing: [0,4,8,12,16,20,24,32,40],
+  shadow: {
+    sm: "0 1px 2px rgba(0,0,0,0.08)",
+    md: "0 4px 12px rgba(0,0,0,0.12)",
+    lg: "0 12px 32px rgba(0,0,0,0.16)"
+  }
+};
+
+Key components to implement
+- AppShell, SidebarNav, TopBar, CommandPalette
+- DataTable with virtual rows, column filters, CSV export
+- MapView with layers: stops, route, clusters, labels, selection
+- DayPlannerBoard with drag and drop
+- PropertyCard, VisitCard, InvoiceCard
+- Form primitives: Text, Select, Date, Phone, Money, Toggle, File
+- Modal, Drawer, Toast, Tooltip, Skeleton, Progress
+- TemplatePreview and PdfExport
+- SmsEmailComposer with merge fields and preview
+- AuditLogTimeline
+
+Primary user flows in detail
+- Plan day: pick date and tech, drag properties, click Build route, choose optimization mode, review stats, click Save plan, click Start.
+- Run visit: open visit card, follow checklist, capture photos, record outcomes, generate certificate, send to client, mark complete.
+- Send outreach: filter due soon, select clients, open composer, insert template, preview, schedule or send.
+- Invoice: select visits, create invoice, send Stripe link, record payment, sync status.
+
+Content rules and microcopy
+- Titles are short and strong. Buttons use verbs. Errors explain what to do next. Confirmation uses Yes or No, not clever text.
+- Numbers use metric units. Dates use ISO or local format with timezone safe display.
+
+Accessibility requirements
+- All controls reachable by keyboard. Visible focus ring. Skip to content link.
+- ARIA labels and roles where needed. High contrast theme. Test with screen readers.
+- Form errors tied to inputs. Motion reduced when prefers reduced motion is on.
+
+Performance budgets and tactics
+- JS bundle initial under 200 KB gzip for core shell. Route map code split and lazy loaded.
+- Use code splitting per screen. Preload data on hover. Cache list responses. Use optimistic updates for low risk actions.
+- Images lazy load. Use responsive sizes. Avoid layout shift.
+- Avoid blocking fonts. Use system font stack or preloaded variable font with fallback.
+
+Error, empty, and loading states
+- Every list and detail view has empty, loading, and error cards with clear actions.
+- Global offline banner when network down. Local retries with backoff.
+
+Internationalization
+- Strings externalized to en.json. Format number and date per locale. RTL safe layouts.
+
+Security and privacy
+- No secrets in client. All tokens retrieved by server. Use Content Security Policy with strict sources. Escape all user content. Sanitize HTML in templates.
+
+Testing plan
+- Unit tests with Vitest and Testing Library for components.
+- Integration tests for data fetching and mutations with MSW.
+- E2E tests with Playwright for core flows: plan day, run visit, send invoice.
+- Lighthouse CI for performance and accessibility checks in CI.
+
+Developer setup commands
+```
+cd gui
+npm create vite@latest gui -- --template react-ts
+cd gui
+npm i @tanstack/react-query zod @hookform/resolvers react-hook-form zustand framer-motion lucide-react
+npm i -D tailwindcss postcss autoprefixer @types/node @testing-library/react @testing-library/user-event vitest jsdom eslint prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin playwright msw
+npx tailwindcss init -p
+npm run dev
+```
+
+Map setup example
+- Use MapLibre GL. Provide style URL from a free tiles endpoint or a paid provider. Keep keys server side and proxy tile requests if needed.
+
+Apps Script and Sheets integration
+- Create a minimal Node proxy or call Apps Script web app endpoints with service auth. Use batched reads and writes.
+- Shape returned data to UI view models. Preserve IDs and timestamps. Use idempotency keys for create operations.
+
+Release plan and CI gates for UI
+- GitHub Actions: build, test, lint, typecheck, Playwright. Upload build artifacts. Track Lighthouse scores.
+- Required checks on pull requests. Preview environment on each PR when budget allows.
+
+PR plan for the GUI
+PR 1: GUI scaffold with Vite, Tailwind, tokens, and app shell.
+PR 2: Data layer and API client with React Query, error boundary, and toasts.
+PR 3: MapView and Route builder with drag reorder and export link.
+PR 4: Day planner with calendar and drag and drop.
+PR 5: Visit execution checklist, photo upload, and certificate generation.
+PR 6: Messaging composer with merge fields and templates.
+PR 7: Invoices list and Stripe checkout link flow.
+PR 8: Accessibility pass and keyboard shortcuts. Command palette.
+PR 9: Analytics events and dashboards. Empty and error states audit.
+PR 10: Performance optimization. Code split and cache. Lighthouse budget in CI.
+
+Acceptance criteria and KPIs
+- Lighthouse: Performance 90 plus, Accessibility 95 plus, Best Practices 95 plus, SEO 90 plus on key screens.
+- p95 interactive under targets. Map route draw under 300 ms for 100 stops with cached geocodes.
+- Keyboard navigation complete. Screen reader pass on core flows.
+- Playwright suite green on CI. No secrets in client. CSP enforced.
+- Operator can plan a 20 stop day and produce certificates and an invoice in under 5 minutes total.
+
+Output required from the agent
+- Full code for gui directory with the structure above.
+- Tokens, global styles, and component library setup.
+- Representative diffs and commands for each PR.
+- Seed data and mock servers for local dev.
+- Clear README with quickstart in 60 seconds and troubleshooting.
+- Tests and CI files ready to run.
+
+If information is missing
+- State the gap. Pick a reasonable default. Make the choice easy to change later.
+
+End of prompt.

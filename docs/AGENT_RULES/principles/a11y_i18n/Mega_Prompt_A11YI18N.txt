@@ -1,0 +1,73 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+A11Y_I18N - MEGA PROMPT
+Date: 2025-09-03
+
+Scope
+Deliver AA accessibility and localizable UI with RTL safe layouts and proper semantics.
+
+Inheritance
+- Read ../core/Repo_Mega_Prompt.txt and ../core/World_Class_Blueprint.txt first.
+- Apply constraints, SLOs, and security rules. This prompt takes precedence where more specific.
+- Respect Google Sheets as the initial system of record and keep the path open for Postgres.
+
+Operating rules
+1) One PR at a time with unified diffs and exact commands. No prose beyond the required sections.
+2) Keep changes surgical and reversible. Include rollback notes if risky.
+3) No secrets in client or code. Use environment variables and Script Properties.
+4) Maintain ASCII only output.
+5) Stop after producing diffs and commands for this PR.
+
+Deliverables
+- Keyboard nav and focus management
+- Screen reader labels and landmarks
+- Externalized strings and RTL checks
+
+Task routing within this principle
+- Keyboard, focus, and shortcuts
+- ARIA roles and labels
+- Locale files and RTL
+
+PR plan
+- PR 1: Keyboard and focus pass on core flows
+- PR 2: Add ARIA labels and landmarks
+- PR 3: Externalize strings to translation files and verify RTL
+
+Acceptance gates
+- Lighthouse accessibility 95 plus
+- Screen reader audit passes
+- RTL renders without breakage
+
+KPIs and budgets
+- Zero critical a11y issues
+- All core flows usable by keyboard only
+
+Risks and rollback
+- Focus traps. Mitigate with audits and tests
+- String mismatches. Mitigate with linting and CI checks
+
+Output format the agent must follow
+- Section A: PR title and rationale
+- Section B: Files changed list
+- Section C: Unified diff
+- Section D: Commands to apply and to run checks
+- Section E: Rollback steps
+- Section F: Acceptance checks to verify
+
+Defaults when information is missing
+- Choose best practice defaults from the core blueprint and prompts.
+- Prefer reversible changes. Provide options when in doubt.

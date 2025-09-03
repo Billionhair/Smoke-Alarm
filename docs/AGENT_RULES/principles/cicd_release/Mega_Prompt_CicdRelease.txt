@@ -1,0 +1,72 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+CICD_RELEASE - MEGA PROMPT
+Date: 2025-09-03
+
+Scope
+Create CI jobs and release policy with semantic versioning and changelog automation.
+
+Inheritance
+- Read ../core/Repo_Mega_Prompt.txt and ../core/World_Class_Blueprint.txt first.
+- Apply constraints, SLOs, and security rules. This prompt takes precedence where more specific.
+- Respect Google Sheets as the initial system of record and keep the path open for Postgres.
+
+Operating rules
+1) One PR at a time with unified diffs and exact commands. No prose beyond the required sections.
+2) Keep changes surgical and reversible. Include rollback notes if risky.
+3) No secrets in client or code. Use environment variables and Script Properties.
+4) Maintain ASCII only output.
+5) Stop after producing diffs and commands for this PR.
+
+Deliverables
+- GitHub Actions workflows for agent and gui
+- Release job with semantic versioning and changelog
+- Optional preview environments
+
+Task routing within this principle
+- Lint, typecheck, test stages
+- Release tagging and artifacts
+- Preview builds
+
+PR plan
+- PR 1: Actions for lint, typecheck, test for agent and gui
+- PR 2: Semantic release job and changelog
+- PR 3: PR previews for gui when budget allows
+
+Acceptance gates
+- Required checks enforced on main
+- Releases tagged with changelog and artifacts
+
+KPIs and budgets
+- CI success over 95 percent
+- Lead time to deploy under 1 day
+
+Risks and rollback
+- Secrets for releases. Mitigate with OIDC and repo environments
+- Long builds. Mitigate with caching and matrix
+
+Output format the agent must follow
+- Section A: PR title and rationale
+- Section B: Files changed list
+- Section C: Unified diff
+- Section D: Commands to apply and to run checks
+- Section E: Rollback steps
+- Section F: Acceptance checks to verify
+
+Defaults when information is missing
+- Choose best practice defaults from the core blueprint and prompts.
+- Prefer reversible changes. Provide options when in doubt.
