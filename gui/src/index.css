@@ -4,7 +4,20 @@
 
 :root {
   --color-bg: #0B0F14;
+ codex/update-readme.md-with-documentation-and-examples-5n26tf
+  --color-bg-alt: #0F1520;
   --color-text: #E6EDF3;
+  --color-text-muted: #AAB2BD;
+  --color-primary: #4DA3FF;
+  --color-success: #22C55E;
+  --color-warn: #F59E0B;
+  --color-danger: #EF4444;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --color-text: #E6EDF3;
+ main
 }
 
 body {
