@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 :root {
- codex/update-readme.md-with-documentation-and-examples-9jhv6i
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
@@ -11,10 +10,6 @@
 
 [data-theme="dark"] {
   --color-bg: #0B0F14;
-
-  --color-bg: #0B0F14;
- codex/update-readme.md-with-documentation-and-examples-5n26tf
- main
   --color-bg-alt: #0F1520;
   --color-text: #E6EDF3;
   --color-text-muted: #AAB2BD;
@@ -22,7 +17,6 @@
   --color-success: #22C55E;
   --color-warn: #F59E0B;
   --color-danger: #EF4444;
- codex/update-readme.md-with-documentation-and-examples-9jhv6i
 }
 
 [data-theme="light"] {
@@ -34,14 +28,6 @@
   --color-success: #16A34A;
   --color-warn: #D97706;
   --color-danger: #DC2626;
-
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-
-  --color-text: #E6EDF3;
- main
- main
 }
 
 body {

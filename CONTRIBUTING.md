@@ -27,6 +27,16 @@ Thank you for considering contributing to Smoke Alarm Compliance.
   ```
 - Ensure your commits have descriptive messages and include tests for any new functionality.
 
+## Resolving merge conflicts
+
+If a merge introduces conflict markers, you can remove them with the helper script:
+
+```bash
+scripts/strip_conflicts.sh <file> [file...]
+```
+
+Review the result carefully to ensure the correct content is kept.
+
 ## Pull Requests
 
 1. Push your branch and open a pull request.
