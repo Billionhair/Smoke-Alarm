@@ -1,4 +1,6 @@
 import unittest
+from unittest.mock import patch
+import requests
 
 from agent.router import optimize_route, plan_multi_day_routes
 
@@ -21,6 +23,12 @@ class TestRouter(unittest.TestCase):
         self.assertEqual(len(result.order), len(addresses))
         self.assertGreater(result.distance_km, 0)
         self.assertGreater(result.duration_min, 0)
+
+    @patch("agent.router.requests.get")
+    def test_optimize_route_http_error(self, mock_get):
+        mock_get.side_effect = requests.RequestException("boom")
+        with self.assertRaises(RuntimeError):
+            optimize_route(["1,2", "3,4"])
 
     def test_plan_multi_day_handles_cancellations(self):
         addresses = [

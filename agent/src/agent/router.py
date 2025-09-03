@@ -59,9 +59,15 @@ def optimize_route(addresses: list[str]) -> RouteResult:
         "roundtrip": "false",
         "overview": "false",
     }
-    resp = requests.get(
-        f"https://router.project-osrm.org/trip/v1/driving/{coord_str}", params=params
-    )
+    try:
+        resp = requests.get(
+            f"https://router.project-osrm.org/trip/v1/driving/{coord_str}",
+            params=params,
+        )
+        resp.raise_for_status()
+    except requests.RequestException as exc:
+        raise RuntimeError(f"Route request failed: {exc}") from exc
+
     data = resp.json()
     if data.get("code") != "Ok" or not data.get("trips"):
         raise RuntimeError(f"OSRM error: {data.get('message')}")

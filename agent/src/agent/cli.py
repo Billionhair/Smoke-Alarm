@@ -115,7 +115,13 @@ def invoice(property: str, alarms: int = 0, batteries: int = 0):
         "unitAmountCents": int(cfg.price_service_cents),
     }]
     if int(alarms) > 0:
-        items.append({"description": "Photoelectric alarm replacement", "quantity": int(alarms), "unitAmountCents": int(cfg.price_alarm_cents)})
+        items.append(
+            {
+                "description": "Photoelectric alarm replacement",
+                "quantity": int(alarms),
+                "unitAmountCents": int(cfg.price_alarm_cents),
+            }
+        )
     inv = sc.create_checkout(items)
     db.append_invoice(client["ClientID"], property, inv)
     print(inv["url"])
