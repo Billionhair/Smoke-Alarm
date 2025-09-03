@@ -9,3 +9,4 @@ protobuf==4.25.3
 orjson==3.10.7
 geopy==2.4.1
 streamlit==1.37.0
+types-requests==2.32.4.20250809
