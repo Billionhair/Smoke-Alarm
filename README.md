@@ -173,6 +173,7 @@ Alternatively, use the convenience scripts from the repository root:
 - Linux/macOS: `./scripts/start_gui.sh`
 - Windows: `scripts\start_gui.bat`
 
+These scripts expose the dev server on your network and print a URL that can be opened on a phone.
 
  main
 Run the component tests with:
