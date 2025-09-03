@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "core": {
+    "repo_prompt": "core/Repo_Mega_Prompt.txt",
+    "blueprint": "core/World_Class_Blueprint.txt",
+    "uiux_prompt": "core/UIUX_Mega_Prompt.txt"
+  },
+  "principles": {
+    "architecture": {
+      "prompt": "principles/architecture/Mega_Prompt_Architecture.txt",
+      "blueprint": "principles/architecture/Blueprint_Architecture.txt"
+    },
+    "uiux": {
+      "prompt": "principles/uiux/Mega_Prompt_UIUX.txt",
+      "blueprint": "principles/uiux/Blueprint_UIUX.txt"
+    },
+    "security": {
+      "prompt": "principles/security/Mega_Prompt_Security.txt",
+      "blueprint": "principles/security/Blueprint_Security.txt"
+    },
+    "testing": {
+      "prompt": "principles/testing/Mega_Prompt_Testing.txt",
+      "blueprint": "principles/testing/Blueprint_Testing.txt"
+    },
+    "performance_reliability": {
+      "prompt": "principles/performance_reliability/Mega_Prompt_PerformanceReliability.txt",
+      "blueprint": "principles/performance_reliability/Blueprint_PerformanceReliability.txt"
+    },
+    "devex": {
+      "prompt": "principles/devex/Mega_Prompt_Devex.txt",
+      "blueprint": "principles/devex/Blueprint_Devex.txt"
+    },
+    "cicd_release": {
+      "prompt": "principles/cicd_release/Mega_Prompt_CicdRelease.txt",
+      "blueprint": "principles/cicd_release/Blueprint_CicdRelease.txt"
+    },
+    "data_api": {
+      "prompt": "principles/data_api/Mega_Prompt_DataApi.txt",
+      "blueprint": "principles/data_api/Blueprint_DataApi.txt"
+    },
+    "docs_governance": {
+      "prompt": "principles/docs_governance/Mega_Prompt_DocsGovernance.txt",
+      "blueprint": "principles/docs_governance/Blueprint_DocsGovernance.txt"
+    },
+    "product_growth": {
+      "prompt": "principles/product_growth/Mega_Prompt_ProductGrowth.txt",
+      "blueprint": "principles/product_growth/Blueprint_ProductGrowth.txt"
+    },
+    "a11y_i18n": {
+      "prompt": "principles/a11y_i18n/Mega_Prompt_A11YI18N.txt",
+      "blueprint": "principles/a11y_i18n/Blueprint_A11YI18N.txt"
+    },
+    "licensing_compliance": {
+      "prompt": "principles/licensing_compliance/Mega_Prompt_LicensingCompliance.txt",
+      "blueprint": "principles/licensing_compliance/Blueprint_LicensingCompliance.txt"
+    }
+  }
+}

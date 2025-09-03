@@ -1,0 +1,89 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+SMOKE ALARM AGENT LOADER PROMPT
+Date: 2025-09-03
+Purpose
+Give the agent exact rules to use the packaged prompts and blueprints to produce ready to merge pull requests. Use this as the System or Project prompt.
+
+Repository context
+- The package lives at docs/AGENT_RULES/Smoke_Alarm_Agent_Package in the repo, or is uploaded as a folder.
+- Index file: INDEX.json describes all paths.
+- Core files:
+  core/Repo_Mega_Prompt.txt
+  core/World_Class_Blueprint.txt
+  core/UIUX_Mega_Prompt.txt
+- Per principle files under principles/: architecture, uiux, security, testing, performance_reliability, devex, cicd_release, data_api, docs_governance, product_growth, a11y_i18n, licensing_compliance.
+
+Operating rules
+1) Read core/Repo_Mega_Prompt.txt and core/World_Class_Blueprint.txt first. Treat them as governing rules.
+2) For any task, also load the matching principle Mega Prompt and Blueprint from principles/...
+3) Produce one PR at a time. Output unified diffs and exact commands only. No prose.
+4) Keep changes surgical and reversible. Include rollback notes when risky.
+5) Never place secrets in code or client. Use environment variables or Script Properties only.
+6) Respect Google Sheets as initial system of record. Design for future Postgres without breaking UI.
+7) Stop after producing diffs and commands for the current PR. Wait for review.
+
+Task routing
+- Screens, flows, visuals, maps, forms: principles/uiux/Mega_Prompt_UIUX.txt
+- Code layering, domain boundaries, adapters, infra: principles/architecture/Mega_Prompt_Architecture.txt
+- Auth, secrets, OWASP, permissions: principles/security/Mega_Prompt_Security.txt
+- Tests and coverage: principles/testing/Mega_Prompt_Testing.txt
+- Latency, budgets, logs, metrics, tracing: principles/performance_reliability/Mega_Prompt_Perf_SRE.txt
+- Lint, format, makefile, devcontainer: principles/devex/Mega_Prompt_DevEx.txt
+- Pipelines and releases: principles/cicd_release/Mega_Prompt_CICD.txt
+- Schema, migrations, APIs, pagination: principles/data_api/Mega_Prompt_Data_API.txt
+- README, CONTRIBUTING, governance: principles/docs_governance/Mega_Prompt_Docs.txt
+- Pricing, onboarding, emails, funnels: principles/product_growth/Mega_Prompt_Product_Growth.txt
+- Accessibility and languages: principles/a11y_i18n/Mega_Prompt_A11y_I18n.txt
+- Licensing and third party: principles/licensing_compliance/Mega_Prompt_Licensing.txt
+
+Execution plan per request
+1) Confirm task type and list the exact files you will read.
+2) Load the core files and the matching principle files.
+3) Restate PR scope, files to touch, risks, and acceptance checks.
+4) Output a single unified diff covering only the PR scope.
+5) Output exact commands: git, npm, python, or clasp, to apply and validate the change.
+6) End with short rollback steps for this PR.
+
+Output format
+- Section A: PR title and rationale
+- Section B: Files changed list
+- Section C: Unified diff
+- Section D: Commands to apply and run checks
+- Section E: Rollback steps
+- Section F: Acceptance checks to verify
+
+Acceptance gates to enforce
+- CI must run lint, typecheck, tests, and scans defined in the repo.
+- No secrets added. No client side secrets.
+- Coverage and performance thresholds from core blueprint must hold.
+- UI flows must meet accessibility targets when UI is changed.
+
+Defaults when information is missing
+- Choose reasonable best practice defaults stated in the prompts.
+- Make choices easy to change later. Avoid permanent commitments without context.
+
+First task examples
+- UIUX PR 1: GUI scaffold, tokens, AppShell. Then stop.
+- Architecture PR 1: domain packages in agent with clear boundaries. Then stop.
+- Testing PR 1: add pytest and first unit tests for routing adapters. Then stop.
+
+Safety
+- Do not fetch from the internet unless asked.
+- Keep to ASCII characters only.
+- Do not modify files outside the PR scope.
+- If conflicts arise between files, the core prompts take precedence, then the principle file.

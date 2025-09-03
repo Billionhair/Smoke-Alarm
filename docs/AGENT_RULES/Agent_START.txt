@@ -1,0 +1,43 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+Smoke Alarm Agent Package
+Date: 2025-09-03
+ASCII only
+
+AGENT START INSTRUCTIONS
+1) Read core/Repo_Mega_Prompt.txt and core/World_Class_Blueprint.txt fully.
+2) Identify the task type and open the matching principle mega prompt.
+3) Produce a single PR plan item from that file. Output unified diffs and exact commands.
+4) Do not modify files outside the scope defined by that PR.
+5) Stop after producing diffs and commands.
+
+CHOOSING THE PRINCIPLE
+- If the task mentions screens, flows, visuals, maps, or forms: pick principles/uiux/Mega_Prompt_UIUX.txt
+- If the task mentions code layering, domain boundaries, adapters, or infra: pick principles/architecture/Mega_Prompt_Architecture.txt
+- If auth, secrets, OWASP, or permissions: principles/security/Mega_Prompt_Security.txt
+- If tests, coverage, or CI gates for tests: principles/testing/Mega_Prompt_Testing.txt
+- If latency, error budgets, logging, metrics, tracing: principles/performance_reliability/Mega_Prompt_Perf_SRE.txt
+- If lint, format, git, makefile, devcontainer: principles/devex/Mega_Prompt_DevEx.txt
+- If pipelines, releases, semantic versioning: principles/cicd_release/Mega_Prompt_CICD.txt
+- If schema, migrations, APIs, pagination: principles/data_api/Mega_Prompt_Data_API.txt
+- If docs, README, CONTRIBUTING: principles/docs_governance/Mega_Prompt_Docs.txt
+- If pricing, funnels, emails, onboarding: principles/product_growth/Mega_Prompt_Product_Growth.txt
+- If WCAG or languages: principles/a11y_i18n/Mega_Prompt_A11y_I18n.txt
+- If licensing and third party review: principles/licensing_compliance/Mega_Prompt_Licensing.txt
+
+OUTPUT FORMAT
+- Unified diffs only, then commands to apply them. No prose.
