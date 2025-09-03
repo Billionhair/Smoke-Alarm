@@ -1,0 +1,2 @@
+AlarmID,PropertyID,Location,Type,PowerSource,InstallDate,ExpiryDate,LastServiceDate,Brand,Model,Notes,CreatedAt,UpdatedAt
+A-0001,P-0001,Hallway,Photoelectric,Battery 9V,2022-08-01,2032-08-01,2025-07-15,BRK,3000,Cleaned and tested,,

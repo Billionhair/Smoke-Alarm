@@ -1,0 +1,2 @@
+ClientID,Type,BusinessName,ContactName,Email,Phone,BillingAddress,Notes,PreferredChannel,StripeCustomerId,CreatedAt,UpdatedAt
+C-0001,Agency,Ace Realty,Sam Jones,pm@acerealty.com,0400 111 222,100 Collins St,Prefers Fridays,email,,,
