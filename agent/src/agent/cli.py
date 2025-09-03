@@ -1,15 +1,19 @@
 """Command-line interface for the Smoke Alarm agent."""
 
-from datetime import date, datetime, timedelta
+from datetime import date
 from typing import List
 
 import typer
 
+from . import backup as backup_mod
+from . import health as health_mod
+from . import renewals as renewals_mod
+from . import stripe_sync as stripe_sync_mod
 from .config import cfg
 from .router import optimize_route, plan_multi_day_routes
+from .stripe_client import StripeClient
 from .sheets import SheetDB
 from .sms_client import SMSClient
-from .stripe_client import StripeClient
 
 
 app = typer.Typer(help="Smoke Alarm AI Agent CLI")
@@ -21,39 +25,34 @@ def ping():
 
 @app.command()
 def renewals(days: int) -> None:
-    """Send SMS reminders for properties due in ``days`` days."""
-    db = SheetDB()
-    today = date.today()
-    target = today + timedelta(days=days)
-    inspections = db.list_inspections()
-    hits: List[dict] = []
-    for ins in inspections:
-        next_due = ins.get("NextDueDate")
-        if not next_due:
-            continue
-        try:
-            nd = datetime.fromisoformat(str(next_due)).date()
-        except Exception:
-            continue
-        if nd == target:
-            hits.append(ins)
-    print(f"{len(hits)} properties due in {days} days.")
-    sms = SMSClient()
-    for ins in hits:
-        prop = db.get_property(ins["PropertyID"])
-        client = db.get_client(prop["ClientID"])
-        phone = client.get("Phone")
-        if not phone:
-            continue
-        msg = (
-            f"Reminder: Property {ins['PropertyID']} due for smoke alarm check on "
-            f"{target.isoformat()}."
-        )
-        try:
-            sms.send(phone, msg)
-            print("SMS sent to", phone)
-        except Exception as e:
-            print("SMS error:", e)
+    """Send reminders for inspections due in ``days`` days."""
+    count = renewals_mod.send(days)
+    print(f"{count} properties due in {days} days.")
+
+
+@app.command()
+def overdue(days: int) -> None:
+    """Send overdue chasers ``days`` days after due (negative)."""
+    count = renewals_mod.chase(days)
+    print(f"Chased {count} overdue at {abs(days)} days.")
+
+
+@app.command()
+def backup(out: str = typer.Option("/tmp/backup", "--out", help="Directory for CSV exports")) -> None:
+    """Export core tabs to ``out`` as CSV files."""
+    backup_mod.backup(out)
+
+
+@app.command()
+def stripe_sync(days: int = typer.Option(14, "--days", help="Look back this many days")) -> None:
+    """Reconcile Stripe payments with invoices."""
+    stripe_sync_mod.sync(days)
+
+
+@app.command()
+def health() -> None:
+    """Run sheet invariant checks."""
+    health_mod.check()
 
 @app.command()
 def route(
