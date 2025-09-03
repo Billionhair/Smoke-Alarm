@@ -64,6 +64,22 @@ Run the unit tests from the repository root:
 PYTHONPATH=agent/src python -m unittest discover agent/tests -v
 ```
 
+### GUI
+
+A React-based operator console lives in [`gui/`](gui). Start the development server with:
+
+```
+cd gui
+npm install
+npm run dev
+```
+
+Run the component tests with:
+
+```
+npm test
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and [docs/README.md](docs/README.md) for additional setup instructions.
