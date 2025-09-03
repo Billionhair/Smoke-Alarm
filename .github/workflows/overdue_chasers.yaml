@@ -1,0 +1,38 @@
+name: overdue_chasers
+
+on:
+  schedule:
+    - cron: '0 21 * * *'
+  workflow_dispatch:
+
+jobs:
+  chasers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -e ./agent
+      - name: Chase +3 days
+        run: python -m agent.cli overdue -3
+        env:
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          SMS_PROVIDER: ${{ secrets.SMS_PROVIDER }}
+          CLICKSEND_USER: ${{ secrets.CLICKSEND_USER }}
+          CLICKSEND_KEY: ${{ secrets.CLICKSEND_KEY }}
+          TWILIO_SID: ${{ secrets.TWILIO_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
+      - name: Chase +10 days
+        run: python -m agent.cli overdue -10
+        env:
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          SMS_PROVIDER: ${{ secrets.SMS_PROVIDER }}
+          CLICKSEND_USER: ${{ secrets.CLICKSEND_USER }}
+          CLICKSEND_KEY: ${{ secrets.CLICKSEND_KEY }}
+          TWILIO_SID: ${{ secrets.TWILIO_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
