@@ -47,17 +47,32 @@ def renewals(days: int):
 
 @app.command()
 def route(
-    addresses: List[str] = typer.Argument(...),
+    addresses: List[str] = typer.Argument(
+        None, help="Addresses to visit; omit and use --date to fetch from sheet"
+    ),
     days: int = typer.Option(1, "--days", help="Plan routes over this many days"),
     responses_file: str = typer.Option(
         None,
         "--responses-file",
         help="Optional JSON mapping of address to confirmation (true/false)",
     ),
+    date_str: str = typer.Option(
+        None,
+        "--date",
+        help="Load properties due on this date (YYYY-MM-DD or 'today')",
+    ),
 ):
-    if len(addresses) < 1:
-        print("At least one address required")
-        raise typer.Exit(code=1)
+    if not addresses:
+        if not date_str:
+            print("Provide at least one address or use --date to load due properties")
+            raise typer.Exit(code=1)
+        db = SheetDB()
+        target = date.today().isoformat() if date_str == "today" else date_str
+        props = db.list_properties_due(target)
+        addresses = [db.format_address(p) for p in props]
+        if not addresses:
+            print("No properties due for", target)
+            raise typer.Exit(code=0)
 
     if days <= 1:
         if len(addresses) < 2:
