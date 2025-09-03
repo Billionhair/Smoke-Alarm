@@ -27,6 +27,16 @@ Thank you for considering contributing to Smoke Alarm Compliance.
   ```
 - Ensure your commits have descriptive messages and include tests for any new functionality.
 
+### Resolving merge conflicts
+
+If you encounter conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) after a merge, run the helper script from the repo root to remove them:
+
+```bash
+./scripts/strip_conflicts.sh
+```
+
+The pre-commit hook will block commits that still contain markers.
+
 ## Pull Requests
 
 1. Push your branch and open a pull request.

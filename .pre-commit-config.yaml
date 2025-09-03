@@ -11,3 +11,10 @@ repos:
         additional_dependencies:
           - types-requests
           - pandas-stubs
+  - repo: local
+    hooks:
+      - id: merge-conflict-check
+        name: Check for merge conflicts
+        entry: bash -c 'rg --files-with-matches "^(<<<<<<<|=======|>>>>>>>)" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
