@@ -5,15 +5,20 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GUI_DIR="$SCRIPT_DIR/../gui"
 PORT=5173
+HOST=0.0.0.0
 
 cd "$GUI_DIR"
 npm install --no-package-lock
-npm run dev &
+npm run dev -- --host "$HOST" &
 SERVER_PID=$!
 
 # Give the server a moment to start
 sleep 2
 URL="http://localhost:$PORT"
+LOCAL_IP=$(ip route get 1 2>/dev/null | awk '{print $7; exit}')
+if [ -n "$LOCAL_IP" ]; then
+  echo "Access the GUI from other devices on the network: http://$LOCAL_IP:$PORT"
+fi
 
 # Open the application in the default browser
 if command -v xdg-open >/dev/null 2>&1; then
