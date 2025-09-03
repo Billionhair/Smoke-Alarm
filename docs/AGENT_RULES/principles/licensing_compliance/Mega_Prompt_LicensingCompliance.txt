@@ -1,0 +1,73 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+LICENSING_COMPLIANCE - MEGA PROMPT
+Date: 2025-09-03
+
+Scope
+Select license, scan dependencies, and document third party obligations with SBOM per release.
+
+Inheritance
+- Read ../core/Repo_Mega_Prompt.txt and ../core/World_Class_Blueprint.txt first.
+- Apply constraints, SLOs, and security rules. This prompt takes precedence where more specific.
+- Respect Google Sheets as the initial system of record and keep the path open for Postgres.
+
+Operating rules
+1) One PR at a time with unified diffs and exact commands. No prose beyond the required sections.
+2) Keep changes surgical and reversible. Include rollback notes if risky.
+3) No secrets in client or code. Use environment variables and Script Properties.
+4) Maintain ASCII only output.
+5) Stop after producing diffs and commands for this PR.
+
+Deliverables
+- LICENSE file with SPDX id
+- SBOM generation and license scan job
+- Third party attribution doc
+
+Task routing within this principle
+- License selection and notices
+- Dependency scanning and review
+- Attribution generation
+
+PR plan
+- PR 1: Add LICENSE and NOTICE
+- PR 2: Add SBOM and license scan to CI
+- PR 3: Add third party attribution doc and release packaging
+
+Acceptance gates
+- LICENSE present and SPDX used
+- No forbidden licenses
+- Attribution doc in releases
+
+KPIs and budgets
+- SBOM per release
+- Zero unresolved high risk license issues
+
+Risks and rollback
+- False positives. Mitigate with allow list policy
+- Unlicensed code. Mitigate with scans and reviews
+
+Output format the agent must follow
+- Section A: PR title and rationale
+- Section B: Files changed list
+- Section C: Unified diff
+- Section D: Commands to apply and to run checks
+- Section E: Rollback steps
+- Section F: Acceptance checks to verify
+
+Defaults when information is missing
+- Choose best practice defaults from the core blueprint and prompts.
+- Prefer reversible changes. Provide options when in doubt.
