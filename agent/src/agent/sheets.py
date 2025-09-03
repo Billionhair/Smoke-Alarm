@@ -1,22 +1,14 @@
 from __future__ import annotations
-import json
 from typing import List
-from google.oauth2 import service_account
 from googleapiclient.discovery import build
+from .google_auth import get_credentials
 from .config import cfg
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets","https://www.googleapis.com/auth/drive"]
 
-def _creds():
-    with open(cfg.sa_path,"r") as f:
-        info = json.load(f)
-    creds = service_account.Credentials.from_service_account_info(info, scopes=SCOPES)
-    if cfg.subject_email:
-        creds = creds.with_subject(cfg.subject_email)
-    return creds
-
 def _sheets():
-    return build("sheets","v4", credentials=_creds()).spreadsheets()
+    creds = get_credentials(SCOPES)
+    return build("sheets","v4", credentials=creds).spreadsheets()
 
 class SheetDB:
     def __init__(self):

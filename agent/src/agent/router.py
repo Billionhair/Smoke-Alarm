@@ -1,8 +1,14 @@
-from urllib.parse import quote_plus
 from dataclasses import dataclass, field
 import re
 import requests
 from geopy.geocoders import Nominatim
+from .config import cfg
+from .router_providers import (
+    OSRMProvider,
+    MapboxProvider,
+    RouteProvider,
+    build_route_url,
+)
 
 
 @dataclass
@@ -20,16 +26,10 @@ class MultiDayPlan:
     daily: dict[int, RouteResult] = field(default_factory=dict)
     canceled: list[str] = field(default_factory=list)
 
-def build_route_url(addresses):
-    if not addresses:
-        return ""
-    enc = [quote_plus(a) for a in addresses]
-    waypoints = "%7C".join(enc[:-1]) if len(enc) > 1 else ""
-    dest = enc[-1]
-    url = f"https://www.google.com/maps/dir/?api=1&destination={dest}"
-    if waypoints:
-        url += f"&waypoints={waypoints}"
-    return url
+def _provider() -> RouteProvider:
+    if cfg.routing_provider == "mapbox":
+        return MapboxProvider()
+    return OSRMProvider()
 
 
 _coord_re = re.compile(r"^-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?$")
@@ -48,38 +48,12 @@ def _geocode(addr: str) -> tuple[float, float]:
 
 
 def optimize_route(addresses: list[str]) -> RouteResult:
-    """Optimize address order using OSRM's trip solver."""
-    if len(addresses) < 2:
-        raise ValueError("At least two addresses are required")
-    coords = [_geocode(a) for a in addresses]
-    coord_str = ";".join([f"{lon},{lat}" for lat, lon in coords])
-    params = {
-        "source": "first",
-        "destination": "last",
-        "roundtrip": "false",
-        "overview": "false",
-    }
+    """Optimize address order using the configured routing provider."""
+    provider = _provider()
     try:
-        resp = requests.get(
-            f"https://router.project-osrm.org/trip/v1/driving/{coord_str}",
-            params=params,
-        )
-        resp.raise_for_status()
+        return provider.optimize(addresses)
     except requests.RequestException as exc:
         raise RuntimeError(f"Route request failed: {exc}") from exc
-
-    data = resp.json()
-    if data.get("code") != "Ok" or not data.get("trips"):
-        raise RuntimeError(f"OSRM error: {data.get('message')}")
-    waypoints = data["waypoints"]
-    ordered: list[str] = [""] * len(addresses)
-    for idx, wp in enumerate(waypoints):
-        ordered[wp["waypoint_index"]] = addresses[idx]
-    trip = data["trips"][0]
-    dist_km = trip["distance"] / 1000
-    dur_min = trip["duration"] / 60
-    url = build_route_url(ordered)
-    return RouteResult(order=ordered, distance_km=dist_km, duration_min=dur_min, url=url)
 
 
 def plan_multi_day_routes(
