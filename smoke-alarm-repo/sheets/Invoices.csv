@@ -1,2 +1,0 @@
-InvoiceID,ClientID,PropertyID,IssueDate,DueDate,Status,Subtotal,Tax,Total,StripeCheckoutUrl,XeroInvoiceId,Notes,CreatedAt,UpdatedAt
-INV-0001,C-0001,P-0001,2025-07-15,2025-07-29,Sent,129.00,0.00,129.00,https://checkout.stripe.com/pay/...,,,,

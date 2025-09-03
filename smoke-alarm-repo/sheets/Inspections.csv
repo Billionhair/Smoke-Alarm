@@ -1,2 +1,0 @@
-InspectionID,PropertyID,Date,Technician,FindingsSummary,ActionsTaken,BatteriesReplacedCount,AlarmsReplacedCount,PhotosFolderUrl,ComplianceStatus,NextDueDate,ReportPdfUrl,InvoiceID,CreatedAt,UpdatedAt
-I-0001,P-0001,2025-07-15,KC,All OK,Cleaned,1,0,https://drive.google.com/folder/...,Compliant,2026-07-15,https://drive.google.com/file/...,INV-0001,,
