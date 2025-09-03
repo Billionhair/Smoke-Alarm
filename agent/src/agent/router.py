@@ -72,7 +72,7 @@ def optimize_route(addresses: list[str]) -> RouteResult:
     if data.get("code") != "Ok" or not data.get("trips"):
         raise RuntimeError(f"OSRM error: {data.get('message')}")
     waypoints = data["waypoints"]
-    ordered = [None] * len(addresses)
+    ordered: list[str] = [""] * len(addresses)
     for idx, wp in enumerate(waypoints):
         ordered[wp["waypoint_index"]] = addresses[idx]
     trip = data["trips"][0]

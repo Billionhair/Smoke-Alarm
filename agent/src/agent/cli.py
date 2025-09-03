@@ -1,25 +1,32 @@
-import typer
-from typing import List
+"""Command-line interface for the Smoke Alarm agent."""
+
 from datetime import date, datetime, timedelta
+from typing import List
+
+import typer
+
 from .config import cfg
-from .sheets import SheetDB
-from .stripe_client import StripeClient
-from .sms_client import SMSClient
 from .router import optimize_route, plan_multi_day_routes
+from .sheets import SheetDB
+from .sms_client import SMSClient
+from .stripe_client import StripeClient
+
 
 app = typer.Typer(help="Smoke Alarm AI Agent CLI")
 
 @app.command()
 def ping():
+    """Simple connectivity check printing the configured sheet ID."""
     print("Agent online. Sheet:", cfg.sheet_id)
 
 @app.command()
-def renewals(days: int):
+def renewals(days: int) -> None:
+    """Send SMS reminders for properties due in ``days`` days."""
     db = SheetDB()
     today = date.today()
     target = today + timedelta(days=days)
     inspections = db.list_inspections()
-    hits = []
+    hits: List[dict] = []
     for ins in inspections:
         next_due = ins.get("NextDueDate")
         if not next_due:
@@ -38,7 +45,10 @@ def renewals(days: int):
         phone = client.get("Phone")
         if not phone:
             continue
-        msg = f"Reminder: Property {ins['PropertyID']} due for smoke alarm check on {target.isoformat()}."
+        msg = (
+            f"Reminder: Property {ins['PropertyID']} due for smoke alarm check on "
+            f"{target.isoformat()}."
+        )
         try:
             sms.send(phone, msg)
             print("SMS sent to", phone)
@@ -46,7 +56,6 @@ def renewals(days: int):
             print("SMS error:", e)
 
 @app.command()
- codex/evaluate-open-source-solvers-for-routing-jnhd16
 def route(
     addresses: List[str] = typer.Argument(
         None, help="Addresses to visit; omit and use --date to fetch from sheet"
@@ -110,40 +119,20 @@ def route(
         if plan.canceled:
             print("Cancelled or unconfirmed:", ", ".join(plan.canceled))
 
-def route(date_str: str = "today"):
-    """Build a map link for properties due on the given date.
-
-    DATE_STR may be "today" or a date in YYYY-MM-DD format.
-    """
-    db = SheetDB()
-    if date_str == "today":
-        target = date.today()
-    else:
-        try:
-            target = datetime.fromisoformat(date_str).date()
-        except ValueError:
-            print("Date must be YYYY-MM-DD or 'today'.")
-            raise typer.Exit(code=1)
-    props = db.list_properties_due(target.isoformat())
-    addrs = [db.format_address(p) for p in props]
-    if not addrs:
-        print("No properties due for", target.isoformat())
-        raise typer.Exit(code=0)
-    url = build_route_url(addrs)
-    print(url)
- main
-
 @app.command()
-def invoice(property: str, alarms: int = 0, batteries: int = 0):
+def invoice(property: str, alarms: int = 0, batteries: int = 0) -> None:
+    """Create a Stripe checkout for a property service visit."""
     db = SheetDB()
     sc = StripeClient()
     prop = db.get_property(property)
     client = db.get_client(prop["ClientID"])
-    items = [{
-        "description": "Annual smoke alarm compliance check",
-        "quantity": 1,
-        "unitAmountCents": int(cfg.price_service_cents),
-    }]
+    items = [
+        {
+            "description": "Annual smoke alarm compliance check",
+            "quantity": 1,
+            "unitAmountCents": int(cfg.price_service_cents),
+        }
+    ]
     if int(alarms) > 0:
         items.append(
             {
@@ -152,32 +141,44 @@ def invoice(property: str, alarms: int = 0, batteries: int = 0):
                 "unitAmountCents": int(cfg.price_alarm_cents),
             }
         )
+    if int(batteries) > 0:
+        items.append(
+            {
+                "description": "9V battery replacement",
+                "quantity": int(batteries),
+                "unitAmountCents": int(cfg.price_battery_cents),
+            }
+        )
     inv = sc.create_checkout(items)
     db.append_invoice(client["ClientID"], property, inv)
     print(inv["url"])
 
 @app.command()
-def leads_enrich(csv_path: str):
+def leads_enrich(csv_path: str) -> None:
+    """Normalize and de-duplicate a CSV of leads."""
     import pandas as pd
+
     df = pd.read_csv(csv_path)
     df.columns = [c.strip().title() for c in df.columns]
-    keep = ["Name","Phone","Email","Website","Suburb"]
+    keep = ["Name", "Phone", "Email", "Website", "Suburb"]
     for k in keep:
         if k not in df.columns:
             df[k] = ""
     df = df[keep].drop_duplicates().reset_index(drop=True)
-    out = csv_path.replace(".csv","_enriched.csv")
+    out = csv_path.replace(".csv", "_enriched.csv")
     df.to_csv(out, index=False)
     print("Saved", out)
 
 @app.command()
-def outreach_sms(list: str, message: str = "We handle annual smoke alarm checks for $129/property. Trial 2-3 this month? Reply YES."):
+def outreach_sms(list: str, message: str = "We handle annual smoke alarm checks for $129/property. Trial 2-3 this month? Reply YES.") -> None:
+    """Send a marketing SMS to numbers in ``list``."""
     import pandas as pd
+
     sms = SMSClient()
     df = pd.read_csv(list)
     sent = 0
     for _, r in df.iterrows():
-        phone = str(r.get("Phone","")).strip()
+        phone = str(r.get("Phone", "")).strip()
         if not phone or phone.lower() == "nan":
             continue
         try:
