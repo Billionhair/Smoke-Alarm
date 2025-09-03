@@ -1,0 +1,27 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+PRODUCT_GROWTH - BLUEPRINT
+Date: 2025-09-03
+
+Definition of done
+- Activation over 40 percent for new users
+- Time to first value under 3 minutes
+- SEO basics present on public pages
+
+KPIs and budgets
+- Week 4 retention over 30 percent
+- Tracked cost per acquisition
