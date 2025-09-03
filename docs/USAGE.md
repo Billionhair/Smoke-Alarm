@@ -51,12 +51,18 @@ Local agent usage
   python -m venv .venv
   . .venv/bin/activate
   pip install -r requirements.txt
-  cp .env.example .env
+ cp .env.example .env
   # place service_account.json in agent
 
 2) Check
   python -m agent.cli ping
-  python -m agent.cli route --date today
+  # build route for today or a specific date (YYYY-MM-DD)
+  python -m agent.cli route today
+  python -m agent.cli route 2024-01-31
+
+Web GUI
+1) From repo root:
+  streamlit run gui/app.py
 
 Day to day
 - Prospecting

@@ -46,12 +46,23 @@ def renewals(days: int):
 
 @app.command()
 def route(date_str: str = "today"):
+    """Build a map link for properties due on the given date.
+
+    DATE_STR may be "today" or a date in YYYY-MM-DD format.
+    """
     db = SheetDB()
-    target = date.today().isoformat() if date_str == "today" else date_str
-    props = db.list_properties_due(target)
+    if date_str == "today":
+        target = date.today()
+    else:
+        try:
+            target = datetime.fromisoformat(date_str).date()
+        except ValueError:
+            print("Date must be YYYY-MM-DD or 'today'.")
+            raise typer.Exit(code=1)
+    props = db.list_properties_due(target.isoformat())
     addrs = [db.format_address(p) for p in props]
     if not addrs:
-        print("No properties due for", target)
+        print("No properties due for", target.isoformat())
         raise typer.Exit(code=0)
     url = build_route_url(addrs)
     print(url)
