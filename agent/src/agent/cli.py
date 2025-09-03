@@ -46,6 +46,7 @@ def renewals(days: int):
             print("SMS error:", e)
 
 @app.command()
+ codex/evaluate-open-source-solvers-for-routing
 def route(
     addresses: List[str] = typer.Argument(
         None, help="Addresses to visit; omit and use --date to fetch from sheet"
@@ -102,6 +103,29 @@ def route(
             print(f"  Map: {res.url}")
         if plan.canceled:
             print("Cancelled or unconfirmed:", ", ".join(plan.canceled))
+
+def route(date_str: str = "today"):
+    """Build a map link for properties due on the given date.
+
+    DATE_STR may be "today" or a date in YYYY-MM-DD format.
+    """
+    db = SheetDB()
+    if date_str == "today":
+        target = date.today()
+    else:
+        try:
+            target = datetime.fromisoformat(date_str).date()
+        except ValueError:
+            print("Date must be YYYY-MM-DD or 'today'.")
+            raise typer.Exit(code=1)
+    props = db.list_properties_due(target.isoformat())
+    addrs = [db.format_address(p) for p in props]
+    if not addrs:
+        print("No properties due for", target.isoformat())
+        raise typer.Exit(code=0)
+    url = build_route_url(addrs)
+    print(url)
+ main
 
 @app.command()
 def invoice(property: str, alarms: int = 0, batteries: int = 0):
