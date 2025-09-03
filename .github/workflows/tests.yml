@@ -16,6 +16,10 @@ jobs:
         run: |
           pip install -r agent/requirements.txt
           pip install ruff mypy
+      - name: Remove conflict markers
+        run: |
+          bash scripts/strip_conflicts.sh
+          git diff --exit-code
       - name: Lint
         run: ruff check agent/src
       - name: Type check

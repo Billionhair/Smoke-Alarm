@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-git ls-files -z | xargs -0 rg -l '^(<<<<<<<|=======|>>>>>>>)' | while read -r file; do
-  echo "Removing conflict markers from $file"
-  sed -e '/^<<<<<<< .*/d' -e '/^=======/d' -e '/^>>>>>>> .*/d' -i "$file"
+files=$(git ls-files -z | xargs -0 rg -l '^(<<<<<<<|=======|>>>>>>>)' || true)
 
-done
+if [[ -n "$files" ]]; then
+  while IFS= read -r file; do
+    echo "Removing conflict markers from $file"
+    sed -e '/^<<<<<<< .*/d' -e '/^=======/d' -e '/^>>>>>>> .*/d' -i "$file"
+  done <<<"$files"
+fi

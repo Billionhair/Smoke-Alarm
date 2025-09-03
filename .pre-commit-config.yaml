@@ -13,6 +13,11 @@ repos:
           - pandas-stubs
   - repo: local
     hooks:
+      - id: strip-conflicts
+        name: Strip merge conflict markers
+        entry: scripts/strip_conflicts.sh
+        language: script
+        pass_filenames: false
       - id: merge-conflict-check
         name: Check for merge conflicts
         entry: bash -c 'rg --files-with-matches "^(<<<<<<<|=======|>>>>>>>)" && exit 1 || exit 0'
