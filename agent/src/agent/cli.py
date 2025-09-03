@@ -94,7 +94,11 @@ def invoice(property: str, alarms: int = 0, batteries: int = 0):
     sc = StripeClient()
     prop = db.get_property(property)
     client = db.get_client(prop["ClientID"])
-    items = [{"description": "Annual smoke alarm compliance check", "quantity": 1, "unitAmountCents": int(cfg.price_service_cents)}]
+    items = [{
+        "description": "Annual smoke alarm compliance check",
+        "quantity": 1,
+        "unitAmountCents": int(cfg.price_service_cents),
+    }]
     if int(alarms) > 0:
         items.append({"description": "Photoelectric alarm replacement", "quantity": int(alarms), "unitAmountCents": int(cfg.price_alarm_cents)})
     inv = sc.create_checkout(items)
