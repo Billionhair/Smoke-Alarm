@@ -1,0 +1,17 @@
+name: deploy-appsscript
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+jobs:
+  push:
+    if: contains(github.event.head_commit.message, '[deploy apps_script]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm i -g @google/clasp
+      - name: Restore clasp auth and config
+        run: |
+          echo "${{ secrets.CLASP_RC_JSON }}" > ~/.clasprc.json
+          echo '{"scriptId":"'"${{ secrets.APPS_SCRIPT_ID }}"'","rootDir":"apps_script"}' > .clasp.json
+      - run: clasp push --force
