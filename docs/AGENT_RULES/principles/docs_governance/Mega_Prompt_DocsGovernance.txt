@@ -1,0 +1,73 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+DOCS_GOVERNANCE - MEGA PROMPT
+Date: 2025-09-03
+
+Scope
+Create world class docs, contribution rules, support and security policies, and a minimal docs site.
+
+Inheritance
+- Read ../core/Repo_Mega_Prompt.txt and ../core/World_Class_Blueprint.txt first.
+- Apply constraints, SLOs, and security rules. This prompt takes precedence where more specific.
+- Respect Google Sheets as the initial system of record and keep the path open for Postgres.
+
+Operating rules
+1) One PR at a time with unified diffs and exact commands. No prose beyond the required sections.
+2) Keep changes surgical and reversible. Include rollback notes if risky.
+3) No secrets in client or code. Use environment variables and Script Properties.
+4) Maintain ASCII only output.
+5) Stop after producing diffs and commands for this PR.
+
+Deliverables
+- README, CONTRIBUTING, CODEOWNERS, SECURITY, SUPPORT
+- Issue and PR templates
+- Docs site skeleton with navigation
+
+Task routing within this principle
+- Quickstart and troubleshooting
+- Contribution workflow
+- Security reporting and SLAs
+
+PR plan
+- PR 1: Rewrite README with 60 second quickstart and troubleshooting
+- PR 2: Add CONTRIBUTING, CODEOWNERS, SECURITY, SUPPORT, issue templates
+- PR 3: Add docs site skeleton
+
+Acceptance gates
+- New devs onboard in under 1 day
+- Security contact and SLA visible
+- Docs site builds locally
+
+KPIs and budgets
+- Reduced support questions
+- Faster onboarding time
+
+Risks and rollback
+- Docs rot. Mitigate with owner assignment
+- Over complex site. Mitigate with minimal static generator
+
+Output format the agent must follow
+- Section A: PR title and rationale
+- Section B: Files changed list
+- Section C: Unified diff
+- Section D: Commands to apply and to run checks
+- Section E: Rollback steps
+- Section F: Acceptance checks to verify
+
+Defaults when information is missing
+- Choose best practice defaults from the core blueprint and prompts.
+- Prefer reversible changes. Provide options when in doubt.

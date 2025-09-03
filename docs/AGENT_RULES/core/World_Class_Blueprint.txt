@@ -1,0 +1,142 @@
+CONFORMANCE WITH CORE REPOSITORY DOCUMENTS
+This file inherits and must conform to:
+- core/Repo_Mega_Prompt.txt
+- core/World_Class_Blueprint.txt
+
+Mandatory repository rules
+- Respect battery only scope. Refer hardwired alarms to licensed electricians.
+- Keep Google Sheets the initial system of record. Design a clean path to Postgres without breaking UI.
+- Keep the route CLI and outputs stable while adding tests and reliability.
+- Keep Apps Script deployable with clasp and allow TypeScript builds.
+- Do not break existing report and invoice templates. Provide a safe migration script.
+
+Output rules
+- Use unified diffs and exact commands for PRs. Keep prose minimal and structured.
+- ASCII only. No secrets in client or code.
+
+SMOKE ALARM WORLD CLASS BLUEPRINT
+Date: 2025-09-03
+Prepared for: Billionhair Smoke-Alarm repo
+
+1. EXECUTIVE SUMMARY AND GOALS
+Goal: deliver a production grade smoke alarm compliance system built around a Python agent and Google Sheets Apps Script. Focus on reliable routing, fast admin workflows, and clean reporting. Hit 99.9 percent availability, sub 300 ms hot path API where applicable, and time to first value under 3 minutes.
+
+2. REPOSITORY INVENTORY AND RISKS
+Observed top level directories: .github workflows, agent, apps_script, docs, gui, scripts, sheets, templates, workflows. Languages in use: Python, JavaScript. Shell used for scripts. Risks: reliance on public OSRM and Nominatim, secrets handling, minimal tests for routing and Apps Script, missing releases, limited docs.
+
+3. ARCHITECTURE AND TARGET DESIGN
+- Modular monolith. Packages: core, scheduling, routing, messaging, invoicing, integrations.
+- Data: Google Sheets as system of record to start. Abstracted repository layer so Postgres can be added later.
+- Services: external routing and geocoding with graceful degradation and caching.
+- Background jobs: queue backed retries for outreach and reminders.
+
+4. DETAILED DECISIONS
+Language and runtime
+- Python 3.12 for agent. Node 20 for Apps Script build chain when using TypeScript.
+Libraries
+- Typer for CLI, httpx for HTTP with retries, pydantic for models, pydantic settings for config, rich for logs and tables.
+- For Apps Script: TypeScript with esbuild, clasp for deploy, eslint and prettier.
+Configuration
+- Twelve factor. Use environment variables and Google Script Properties. No secrets in code.
+Routing and geocoding
+- Add provider abstraction with adapters for OSRM and Mapbox or OpenRouteService. Caching in Redis optional or on disk if needed.
+Payments
+- Stripe Checkout or Invoicing API wired through the agent, with idempotency keys for create operations.
+Messaging
+- Email via Gmail API with service account or delegated auth. SMS via Twilio or local provider.
+
+5. CLI AND API DESIGN
+- Keep route command and flags stable. Add dry run and export to Google Maps links. - Add commands: renewals, outreach, stripe-invoice, calendar-sync.
+
+6. DATA MODEL AND SHEET SCHEMAS
+- Define a schema file for each tab: Settings, Properties, Visits, Contacts, Templates, Invoices. - Add validation rules and named ranges in Apps Script setup. - Add a migration tool that can add new columns and backfill defaults safely.
+
+7. SECURITY, PRIVACY, AND COMPLIANCE
+- Scope Apps Script OAuth to least privilege. Store Drive and Sheets file IDs in Script Properties. - GitHub Advanced Security and secret scanning. Dependabot or Renovate for dependency pinning. - SBOM generation for Python and Node. audit and license checks in CI.
+
+8. OBSERVABILITY AND SRE
+- Structured logs, request IDs, error tracking. - Metrics: route planning time, success rate, geocoding cache hit rate, SMS and email delivery.
+
+9. PERFORMANCE AND SCALABILITY
+- Cache geocoding results and OSRM table responses. - Batch requests where possible. - Add concurrency with asyncio where I O dominates.
+
+10. TEST STRATEGY AND QUALITY GATES
+- Unit tests for routing math and adapters. - Integration tests that hit a local OSRM or mock server. - Contract tests for Apps Script functions with clasp push to a test script project. - Coverage target 80 percent lines, 70 percent branches.
+
+11. DEVELOPER EXPERIENCE
+- Repo tasks via Makefile. Pre commit hooks for lint and format. - Editorconfig and consistent .gitattributes. - Devcontainer for quick bootstrap.
+
+12. DOCUMENTATION AND PRODUCT POLISH
+- Rewrite README with quickstart in 60 seconds and clear setup for both agent and Apps Script. - Add CONTRIBUTING, CODEOWNERS, SECURITY, and SUPPORT. - Add docs site with minimal static site generator.
+
+13. CI AND CD PIPELINES
+- GitHub Actions: python lint, type check, unit tests; node lint and build for Apps Script; secret scan. - Scheduled jobs for daily route planning and reminder sending. - Artifacts and release tagging with semantic release.
+
+14. RELEASE MANAGEMENT
+- Semantic versioning. Auto changelog. - Canary deploy for Apps Script by using a test script project first.
+
+15. UX AND UI
+- Operator console in gui for day planning, confirmations, and reports. - Consistent design tokens and accessible components.
+
+16. ANALYTICS AND KPIS
+- Track activation, retained users, tasks completed, cost per job, route efficiency. - KPIs: activation over 40 percent, week 4 retention over 30 percent, p95 route compute under 8 seconds per 100 stops.
+
+17. 30 60 90 DAY ROADMAP
+Day 0 to 30
+- Hardening: lint, type checks, tests, secrets. - Apps Script TypeScript scaffold and clasp pipeline. - Routing adapter abstraction and caching layer.
+Day 31 to 60
+- Ship renewals and outreach commands. - Build operator console MVP. - Payment flow and invoice template integration.
+Day 61 to 90
+- Add SSO for console and audit logs. - Optimize performance and cost. - Prepare optional Postgres migration path.
+
+18. PR PLAN WITH REPRESENTATIVE DIFFS
+PR 1: Repo standards and CI
+- Files: .editorconfig, .gitattributes, .pre-commit-config.yaml, .github workflows python.yml and node.yml
+- Commands: ruff, mypy, pytest; eslint, prettier; secret scan
+PR 2: Agent packaging and CLI
+- Create agent src package with typer CLI and httpx client. Add config via pydantic settings.
+PR 3: Routing adapters and caching
+- Add providers osrm.py and ors.py. Add cache. Add retries and backoff.
+PR 4: Tests and fixtures
+- Add unit and integration tests with mock servers. Coverage target 80 percent.
+PR 5: Apps Script TypeScript scaffold
+- Set up clasp, tsconfig, eslint, prettier, build script, and triggers in code.
+PR 6: Templates and document generation
+- Add placeholder replacement utility. Safe migration script for existing templates.
+PR 7: Messaging adapters
+- Gmail and Twilio adapters with queue and idempotency.
+PR 8: Payments and receipts
+- Stripe integration with idempotency keys and webhook handler.
+PR 9: Operator console MVP
+- React Vite app in gui with auth, day planner, and link outs to Google Maps.
+PR 10: Docs site and governance
+- README rewrite, CONTRIBUTING, SECURITY, CODEOWNERS, docs site, and changelog.
+
+19. ACCEPTANCE CRITERIA AND KPIS
+- Green CI on main with required checks. - 80 percent coverage. - Route plan for 100 stops produced in under 8 seconds using cached geocodes. - Zero secrets in code. - Apps Script deployable with one command.
+
+20. REFERENCE CONFIG SNIPPETS
+pyproject.toml ruff mypy pytest
+[tool.ruff]
+line-length = 100
+
+tsconfig.json
+{"compilerOptions":{"target":"ES2020","module":"ESNext","strict":true}}
+
+.github workflows python.yml
+name: python
+on: [push]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install ruff mypy pytest httpx typer pydantic
+      - run: ruff check .
+      - run: mypy agent
+      - run: pytest -q
+
+End of blueprint
