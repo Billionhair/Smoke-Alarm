@@ -76,6 +76,14 @@ class SheetDB:
         ]
         self._append("Invoices", [row])
 
-    def format_address(self, p: dict):
-        parts = [p.get("AddressLine1",""), p.get("AddressLine2",""), p.get("Suburb",""), p.get("Postcode",""), p.get("State","")]
-        return ", ".join([x for x in parts if x])
+    @staticmethod
+    def format_address(p: dict) -> str:
+        """Return a single-line address from property fields."""
+        parts = [
+            p.get("AddressLine1", ""),
+            p.get("AddressLine2", ""),
+            p.get("Suburb", ""),
+            p.get("Postcode", ""),
+            p.get("State", ""),
+        ]
+        return ", ".join(x for x in parts if x)
