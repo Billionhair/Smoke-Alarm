@@ -3,6 +3,7 @@
 from datetime import date
 from typing import List
 
+import logging
 import typer
 
 from . import backup as backup_mod
@@ -14,45 +15,63 @@ from .router import optimize_route, plan_multi_day_routes
 from .stripe_client import StripeClient
 from .sheets import SheetDB
 from .sms_client import SMSClient
+from .routing import planner
+from . import outreach
+from .logging import configure as configure_logging
 
 
 app = typer.Typer(help="Smoke Alarm AI Agent CLI")
+logger = logging.getLogger("agent")
+
+
+@app.callback()
+def main(ctx: typer.Context) -> None:
+    """Initialize common logging configuration."""
+    configure_logging()
+
 
 @app.command()
-def ping():
+def ping() -> None:
     """Simple connectivity check printing the configured sheet ID."""
-    print("Agent online. Sheet:", cfg.sheet_id)
+    logger.info("Agent online. Sheet: %s", cfg.sheet_id)
+
 
 @app.command()
 def renewals(days: int) -> None:
     """Send reminders for inspections due in ``days`` days."""
     count = renewals_mod.send(days)
-    print(f"{count} properties due in {days} days.")
+    logger.info("%s properties due in %s days.", count, days)
 
 
 @app.command()
 def overdue(days: int) -> None:
     """Send overdue chasers ``days`` days after due (negative)."""
     count = renewals_mod.chase(days)
-    print(f"Chased {count} overdue at {abs(days)} days.")
+    logger.info("Chased %s overdue at %s days.", count, abs(days))
 
 
 @app.command()
-def backup(out: str = typer.Option("/tmp/backup", "--out", help="Directory for CSV exports")) -> None:
+def backup(
+    out: str = typer.Option("/tmp/backup", "--out", help="Directory for CSV exports"),
+) -> None:
     """Export core tabs to ``out`` as CSV files."""
     backup_mod.backup(out)
+    logger.info("Backup written to %s", out)
 
 
 @app.command()
 def stripe_sync(days: int = typer.Option(14, "--days", help="Look back this many days")) -> None:
     """Reconcile Stripe payments with invoices."""
     stripe_sync_mod.sync(days)
+    logger.info("Stripe sync completed for last %s days", days)
 
 
 @app.command()
 def health() -> None:
     """Run sheet invariant checks."""
     health_mod.check()
+    logger.info("Health checks completed")
+
 
 @app.command()
 def route(
@@ -79,26 +98,26 @@ def route(
     """
     if not addresses:
         if not date_str:
-            print("Provide at least one address or use --date to load due properties")
+            logger.warning("Provide at least one address or use --date to load due properties")
             raise typer.Exit(code=1)
         db = SheetDB()
         target = date.today().isoformat() if date_str == "today" else date_str
         props = db.list_properties_due(target)
         addresses = [db.format_address(p) for p in props]
         if not addresses:
-            print("No properties due for", target)
+            logger.info("No properties due for %s", target)
             raise typer.Exit(code=0)
 
     if days <= 1:
         if len(addresses) < 2:
-            print("At least two addresses required")
+            logger.error("At least two addresses required")
             raise typer.Exit(code=1)
         result = optimize_route(addresses)
         for i, addr in enumerate(result.order, start=1):
-            print(f"{i}. {addr}")
-        print(f"Total distance: {result.distance_km:.1f} km")
-        print(f"Total duration: {result.duration_min:.1f} min")
-        print(result.url)
+            logger.info("%s. %s", i, addr)
+        logger.info("Total distance: %.1f km", result.distance_km)
+        logger.info("Total duration: %.1f min", result.duration_min)
+        logger.info(result.url)
     else:
         import json
 
@@ -109,14 +128,15 @@ def route(
         plan = plan_multi_day_routes(addresses, days=days, responses=responses)
         for day in sorted(plan.daily):
             res = plan.daily[day]
-            print(f"Day {day}:")
+            logger.info("Day %s:", day)
             for i, addr in enumerate(res.order, start=1):
-                print(f"  {i}. {addr}")
-            print(f"  Distance: {res.distance_km:.1f} km")
-            print(f"  Duration: {res.duration_min:.1f} min")
-            print(f"  Map: {res.url}")
+                logger.info("  %s. %s", i, addr)
+            logger.info("  Distance: %.1f km", res.distance_km)
+            logger.info("  Duration: %.1f min", res.duration_min)
+            logger.info("  Map: %s", res.url)
         if plan.canceled:
-            print("Cancelled or unconfirmed:", ", ".join(plan.canceled))
+            logger.info("Cancelled or unconfirmed: %s", ", ".join(plan.canceled))
+
 
 @app.command()
 def invoice(property: str, alarms: int = 0, batteries: int = 0) -> None:
@@ -150,7 +170,8 @@ def invoice(property: str, alarms: int = 0, batteries: int = 0) -> None:
         )
     inv = sc.create_checkout(items)
     db.append_invoice(client["ClientID"], property, inv)
-    print(inv["url"])
+    logger.info(inv["url"])
+
 
 @app.command()
 def leads_import(csv_path: str) -> None:
@@ -158,18 +179,19 @@ def leads_import(csv_path: str) -> None:
     import pandas as pd
 
     df = pd.read_csv(csv_path)
-    df.columns = [c.strip().title() for c in df.columns]
+    df.columns = pd.Index([c.strip().title() for c in df.columns])
     keep = ["Name", "Email", "Phone"]
     for k in keep:
         if k not in df.columns:
             df[k] = ""
     rows = df[keep].fillna("").values.tolist()
     if not rows:
-        print("No leads found")
+        logger.warning("No leads found")
         return
     db = SheetDB()
     db._append("Leads", rows)
-    print(f"Imported {len(rows)} leads.")
+    logger.info("Imported %s leads.", len(rows))
+
 
 @app.command()
 def leads_enrich(csv_path: str) -> None:
@@ -177,7 +199,7 @@ def leads_enrich(csv_path: str) -> None:
     import pandas as pd
 
     df = pd.read_csv(csv_path)
-    df.columns = [c.strip().title() for c in df.columns]
+    df.columns = pd.Index([c.strip().title() for c in df.columns])
     keep = ["Name", "Phone", "Email", "Website", "Suburb"]
     for k in keep:
         if k not in df.columns:
@@ -185,10 +207,14 @@ def leads_enrich(csv_path: str) -> None:
     df = df[keep].drop_duplicates().reset_index(drop=True)
     out = csv_path.replace(".csv", "_enriched.csv")
     df.to_csv(out, index=False)
-    print("Saved", out)
+    logger.info("Saved %s", out)
+
 
 @app.command()
-def outreach_sms(list: str, message: str = "We handle annual smoke alarm checks for $129/property. Trial 2-3 this month? Reply YES.") -> None:
+def outreach_sms(
+    list: str,
+    message: str = "We handle annual smoke alarm checks for $129/property. Trial 2-3 this month? Reply YES.",
+) -> None:
     """Send a marketing SMS to numbers in ``list``."""
     import pandas as pd
 
@@ -203,8 +229,32 @@ def outreach_sms(list: str, message: str = "We handle annual smoke alarm checks 
             sms.send(phone, message)
             sent += 1
         except Exception as e:
-            print("SMS error:", e)
-    print("SMS sent:", sent)
+            logger.error("SMS error: %s", e)
+    logger.info("SMS sent: %s", sent)
+
+
+@app.command()
+def outreach_sequence(name: str) -> None:
+    """Run the outreach sequence ``name`` for all leads."""
+    db = SheetDB()
+    leads = db._rows("Leads")
+    activities: set[tuple[str, int]] = set()
+
+    def sms(to: str, body: str) -> None:
+        logger.info("SMS to %s -> %s", to, body)
+
+    outreach.run_sequence(name, leads, activities, send_sms=sms)
+
+
+@app.command()
+def plan_routes_simple(addresses: List[str]) -> None:
+    """Plan a simple route for ``addresses`` and print the order."""
+    res = planner.plan_route(addresses)
+    for i, addr in enumerate(res["order"], start=1):
+        logger.info("%s. %s", i, addr)
+    if res["url"]:
+        logger.info(res["url"])
+
 
 if __name__ == "__main__":
     app()
