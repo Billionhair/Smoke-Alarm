@@ -35,6 +35,30 @@ class SheetDB:
             out.append(obj)
         return out
 
+    def find_row(self, sheet: str, column: str, value: str):
+        """Return ``(index, row)`` for ``sheet`` where ``column`` equals ``value``.
+
+        The index is 1-based including the header row, matching Google Sheets
+        API semantics. ``None`` is returned if no match is found.
+        """
+        rows = self._rows(sheet)
+        for idx, row in enumerate(rows, start=2):
+            if row.get(column) == value:
+                return idx, row
+        return None, None
+
+    def update_row(self, sheet: str, index: int, row: dict) -> None:
+        """Update ``sheet`` row ``index`` with the values from ``row``."""
+        headers = self._headers(sheet)
+        values = [[row.get(h, "") for h in headers]]
+        body = {"values": values}
+        self.ss.values().update(
+            spreadsheetId=self.sid,
+            range=f"{sheet}!A{index}",
+            valueInputOption="USER_ENTERED",
+            body=body,
+        ).execute()
+
     def list_inspections(self):
         return self._rows("Inspections")
 

@@ -1,0 +1,7 @@
+{
+  "pm_trial": [
+    {"day": 0, "channel": "sms", "template": "sms_day0.txt"},
+    {"day": 2, "channel": "email", "template": "email_day2.txt"},
+    {"day": 5, "channel": "sms", "template": "sms_day5.txt"}
+  ]
+}

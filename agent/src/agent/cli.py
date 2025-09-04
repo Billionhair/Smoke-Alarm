@@ -14,6 +14,8 @@ from .router import optimize_route, plan_multi_day_routes
 from .stripe_client import StripeClient
 from .sheets import SheetDB
 from .sms_client import SMSClient
+from .routing import planner
+from . import outreach
 
 
 app = typer.Typer(help="Smoke Alarm AI Agent CLI")
@@ -205,6 +207,29 @@ def outreach_sms(list: str, message: str = "We handle annual smoke alarm checks 
         except Exception as e:
             print("SMS error:", e)
     print("SMS sent:", sent)
+
+
+@app.command()
+def outreach_sequence(name: str) -> None:
+    """Run the outreach sequence ``name`` for all leads."""
+    db = SheetDB()
+    leads = db._rows("Leads")
+    activities: set[tuple[str, int]] = set()
+
+    def sms(to: str, body: str) -> None:
+        print("SMS to", to, "->", body)
+
+    outreach.run_sequence(name, leads, activities, send_sms=sms)
+
+
+@app.command()
+def plan_routes_simple(addresses: List[str]) -> None:
+    """Plan a simple route for ``addresses`` and print the order."""
+    res = planner.plan_route(addresses)
+    for i, addr in enumerate(res["order"], start=1):
+        print(f"{i}. {addr}")
+    if res["url"]:
+        print(res["url"])
 
 if __name__ == "__main__":
     app()
