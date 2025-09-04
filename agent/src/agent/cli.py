@@ -153,6 +153,25 @@ def invoice(property: str, alarms: int = 0, batteries: int = 0) -> None:
     print(inv["url"])
 
 @app.command()
+def leads_import(csv_path: str) -> None:
+    """Import leads from a CSV file into the Leads sheet."""
+    import pandas as pd
+
+    df = pd.read_csv(csv_path)
+    df.columns = [c.strip().title() for c in df.columns]
+    keep = ["Name", "Email", "Phone"]
+    for k in keep:
+        if k not in df.columns:
+            df[k] = ""
+    rows = df[keep].fillna("").values.tolist()
+    if not rows:
+        print("No leads found")
+        return
+    db = SheetDB()
+    db._append("Leads", rows)
+    print(f"Imported {len(rows)} leads.")
+
+@app.command()
 def leads_enrich(csv_path: str) -> None:
     """Normalize and de-duplicate a CSV of leads."""
     import pandas as pd
