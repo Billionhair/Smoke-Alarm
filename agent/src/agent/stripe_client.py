@@ -30,9 +30,7 @@ class StripeClient:
             subtotal += unit * qty
             form[f"line_items[{i}][quantity]"] = str(qty)
             form[f"line_items[{i}][price_data][currency]"] = "aud"
-            form[f"line_items[{i}][price_data][product_data][name]"] = li[
-                "description"
-            ]
+            form[f"line_items[{i}][price_data][product_data][name]"] = li["description"]
             unit_with_tax = unit + int(round(unit * gst))
             form[f"line_items[{i}][price_data][unit_amount]"] = str(unit_with_tax)
         tax = int(round(subtotal * gst))
@@ -49,3 +47,8 @@ class StripeClient:
         data["tax"] = tax
         data["total"] = total
         return data
+
+    # The real implementation would call Stripe's API. For unit tests we allow
+    # this method to be monkeypatched.
+    def list_checkout_sessions(self, since):  # pragma: no cover - network call
+        return []

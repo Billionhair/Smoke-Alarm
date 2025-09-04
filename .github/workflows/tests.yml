@@ -15,11 +15,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r agent/requirements.txt
-          pip install ruff mypy
+          pip install ruff mypy pytest pytest-cov
       - name: Lint
         run: ruff check agent/src
       - name: Type check
         run: mypy agent/src
       - name: Run tests
         run: |
-          PYTHONPATH=agent/src python -m unittest discover agent/tests -v
+          PYTHONPATH=agent/src pytest --maxfail=1 --disable-warnings -q --cov=agent --cov-report=term-missing
