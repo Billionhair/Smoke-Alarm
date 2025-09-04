@@ -49,3 +49,8 @@ class StripeClient:
         data["tax"] = tax
         data["total"] = total
         return data
+
+    # The real implementation would call Stripe's API. For unit tests we allow
+    # this method to be monkeypatched.
+    def list_checkout_sessions(self, since):  # pragma: no cover - network call
+        return []

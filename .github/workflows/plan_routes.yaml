@@ -1,0 +1,14 @@
+name: plan_routes
+on:
+  schedule:
+    - cron: '30 20 * * *'
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Plan
+        run: |
+          python -m pip install -r agent/requirements.txt
+          PYTHONPATH=agent/src python -m agent.cli plan_routes_simple "Address A" "Address B"
