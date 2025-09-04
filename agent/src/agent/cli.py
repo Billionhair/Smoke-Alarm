@@ -17,7 +17,10 @@ from .sheets import SheetDB
 from .sms_client import SMSClient
 from .routing import planner
 from . import outreach
+codex/identify-repo-features-and-builds-vj8jec
 from .logging import configure as configure_logging
+
+ main
 
 
 app = typer.Typer(help="Smoke Alarm AI Agent CLI")
@@ -243,6 +246,29 @@ def plan_routes_simple(addresses: List[str]) -> None:
         logger.info("%s. %s", i, addr)
     if res["url"]:
         logger.info(res["url"])
+
+
+@app.command()
+def outreach_sequence(name: str) -> None:
+    """Run the outreach sequence ``name`` for all leads."""
+    db = SheetDB()
+    leads = db._rows("Leads")
+    activities: set[tuple[str, int]] = set()
+
+    def sms(to: str, body: str) -> None:
+        print("SMS to", to, "->", body)
+
+    outreach.run_sequence(name, leads, activities, send_sms=sms)
+
+
+@app.command()
+def plan_routes_simple(addresses: List[str]) -> None:
+    """Plan a simple route for ``addresses`` and print the order."""
+    res = planner.plan_route(addresses)
+    for i, addr in enumerate(res["order"], start=1):
+        print(f"{i}. {addr}")
+    if res["url"]:
+        print(res["url"])
 
 if __name__ == "__main__":
     app()

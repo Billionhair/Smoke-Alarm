@@ -1,11 +1,17 @@
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, beforeEach } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import React from "react";
 import App from "../App";
 
 describe("App", () => {
-  afterEach(() => cleanup());
+  beforeEach(() => {
+    window.localStorage.setItem("trialActive", "true");
+  });
+  afterEach(() => {
+    cleanup();
+    window.localStorage.clear();
+  });
 
   it("renders navigation and search", () => {
     window.history.pushState({}, "", "/");

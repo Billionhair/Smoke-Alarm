@@ -4,6 +4,8 @@ import { AppShell } from "./components/AppShell";
 import { ClientPortal } from "./components/ClientPortal";
 import { AdminPanel } from "./components/AdminPanel";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { PricingPage } from "./components/PricingPage";
+import { TrialGuard } from "./components/TrialGuard";
 
 export default function App() {
   return (
@@ -16,7 +18,15 @@ export default function App() {
           Skip to content
         </a>
         <Routes>
-          <Route path="/" element={<AppShell />} />
+          <Route
+            path="/"
+            element={
+              <TrialGuard>
+                <AppShell />
+              </TrialGuard>
+            }
+          />
+          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/client" element={<ClientPortal />} />
           <Route path="/admin" element={<AdminPanel />} />
         </Routes>
