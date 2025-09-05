@@ -28,6 +28,7 @@ if git grep -n -E '^(<{7}|={7}|>{7}|\|{7})' -- . >/dev/null; then
   exit 1
 fi
 
+ codex/set-up-git-auto-resolve-and-checks
 # run pre-commit checks on staged files if available
 if command -v pre-commit >/dev/null; then
   pre-commit run --hook-stage manual --files $(git diff --name-only --cached)
@@ -37,5 +38,9 @@ fi
 if command -v pytest >/dev/null; then
   PYTHONPATH=agent/src pytest -q || true
 fi
+
+# optional smoke tests if present
+PYTHONPATH=agent/src pytest -q || true
+ main
 
 echo "Preflight complete. Ready to push."

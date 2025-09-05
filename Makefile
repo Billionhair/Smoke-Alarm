@@ -1,5 +1,8 @@
+ codex/set-up-git-auto-resolve-and-checks
 .PHONY: pr setup
 
+
+ main
 pr:
 	@bash scripts/pr-preflight.sh
 
