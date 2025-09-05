@@ -17,9 +17,13 @@ from .sheets import SheetDB
 from .sms_client import SMSClient
 from .routing import planner
 from . import outreach
+ codex/identify-repo-features-and-builds-016493
+from .logging import configure as configure_logging
+
 codex/identify-repo-features-and-builds-vj8jec
 from .logging import configure as configure_logging
 
+ main
  main
 
 
@@ -37,6 +41,10 @@ def main(ctx: typer.Context) -> None:
 def ping() -> None:
     """Simple connectivity check printing the configured sheet ID."""
     logger.info("Agent online. Sheet: %s", cfg.sheet_id)
+ codex/identify-repo-features-and-builds-016493
+
+
+ main
 
 @app.command()
 def renewals(days: int) -> None:
@@ -53,7 +61,9 @@ def overdue(days: int) -> None:
 
 
 @app.command()
-def backup(out: str = typer.Option("/tmp/backup", "--out", help="Directory for CSV exports")) -> None:
+def backup(
+    out: str = typer.Option("/tmp/backup", "--out", help="Directory for CSV exports"),
+) -> None:
     """Export core tabs to ``out`` as CSV files."""
     backup_mod.backup(out)
     logger.info("Backup written to %s", out)
@@ -71,6 +81,10 @@ def health() -> None:
     """Run sheet invariant checks."""
     health_mod.check()
     logger.info("Health checks completed")
+ codex/identify-repo-features-and-builds-016493
+
+
+ main
 
 @app.command()
 def route(
@@ -135,6 +149,10 @@ def route(
             logger.info("  Map: %s", res.url)
         if plan.canceled:
             logger.info("Cancelled or unconfirmed: %s", ", ".join(plan.canceled))
+ codex/identify-repo-features-and-builds-016493
+
+
+ main
 
 @app.command()
 def invoice(property: str, alarms: int = 0, batteries: int = 0) -> None:
@@ -169,6 +187,10 @@ def invoice(property: str, alarms: int = 0, batteries: int = 0) -> None:
     inv = sc.create_checkout(items)
     db.append_invoice(client["ClientID"], property, inv)
     logger.info(inv["url"])
+ codex/identify-repo-features-and-builds-016493
+
+
+ main
 
 @app.command()
 def leads_import(csv_path: str) -> None:
@@ -176,7 +198,7 @@ def leads_import(csv_path: str) -> None:
     import pandas as pd
 
     df = pd.read_csv(csv_path)
-    df.columns = [c.strip().title() for c in df.columns]
+    df.columns = pd.Index([c.strip().title() for c in df.columns])
     keep = ["Name", "Email", "Phone"]
     for k in keep:
         if k not in df.columns:
@@ -188,6 +210,10 @@ def leads_import(csv_path: str) -> None:
     db = SheetDB()
     db._append("Leads", rows)
     logger.info("Imported %s leads.", len(rows))
+ codex/identify-repo-features-and-builds-016493
+
+
+ main
 
 @app.command()
 def leads_enrich(csv_path: str) -> None:
@@ -195,7 +221,7 @@ def leads_enrich(csv_path: str) -> None:
     import pandas as pd
 
     df = pd.read_csv(csv_path)
-    df.columns = [c.strip().title() for c in df.columns]
+    df.columns = pd.Index([c.strip().title() for c in df.columns])
     keep = ["Name", "Phone", "Email", "Website", "Suburb"]
     for k in keep:
         if k not in df.columns:
@@ -204,9 +230,16 @@ def leads_enrich(csv_path: str) -> None:
     out = csv_path.replace(".csv", "_enriched.csv")
     df.to_csv(out, index=False)
     logger.info("Saved %s", out)
+ codex/identify-repo-features-and-builds-016493
+
+
+ main
 
 @app.command()
-def outreach_sms(list: str, message: str = "We handle annual smoke alarm checks for $129/property. Trial 2-3 this month? Reply YES.") -> None:
+def outreach_sms(
+    list: str,
+    message: str = "We handle annual smoke alarm checks for $129/property. Trial 2-3 this month? Reply YES.",
+) -> None:
     """Send a marketing SMS to numbers in ``list``."""
     import pandas as pd
 
@@ -247,6 +280,8 @@ def plan_routes_simple(addresses: List[str]) -> None:
     if res["url"]:
         logger.info(res["url"])
 
+ codex/identify-repo-features-and-builds-016493
+
 
 @app.command()
 def outreach_sequence(name: str) -> None:
@@ -269,6 +304,7 @@ def plan_routes_simple(addresses: List[str]) -> None:
         print(f"{i}. {addr}")
     if res["url"]:
         print(res["url"])
+ main
 
 if __name__ == "__main__":
     app()
