@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install dependencies
+        run: |
+          uv pip install --system -U pip
+          uv pip install --system ruff mypy pytest pytest-xdist coverage pytest-cov hypothesis bandit pip-audit deptry pipdeptree
+          # project deps
+          if [ -f requirements.txt ]; then uv pip install --system -r requirements.txt; fi
+
+      - name: Lint and format
+        run: |
+          ruff check . --fix
+          ruff format .
+
+      - name: Type check
+        run: mypy .
+
+      - name: Tests
+        run: pytest -n auto --cov=agent --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: true
+
+      - name: Security
+        run: |
+          bandit -q -r agent -x tests
+          pip-audit -r requirements.txt --strict || true
+
+      - name: Dependency hygiene
+        run: |
+          deptry
+          pipdeptree
+
