@@ -77,5 +77,11 @@ def upsert_company_contact(
             break
     if not contact_id:
         contact_id = new_id("CT")
+ codex/identify-repo-features-and-builds-016493
         contacts.append({"ContactID": contact_id, "CompanyID": company_id, "Email": contact_email})
+
+        contacts.append(
+            {"ContactID": contact_id, "CompanyID": company_id, "Email": contact_email}
+        )
+ main
     return company_id, contact_id

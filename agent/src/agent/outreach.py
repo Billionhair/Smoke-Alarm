@@ -41,10 +41,14 @@ def run_sequence(
 
     performed: List[Tuple[str, str]] = []
     for lead in leads:
+ codex/identify-repo-features-and-builds-016493
         created_str = lead.get("CreatedAt")
         if created_str is None:
             continue
         created = datetime.fromisoformat(created_str)
+
+        created = datetime.fromisoformat(lead.get("CreatedAt"))
+ main
         for step in steps:
             due = created + timedelta(days=step["day"])
             if due.date() != today.date():
