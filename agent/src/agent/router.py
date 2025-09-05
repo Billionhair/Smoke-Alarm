@@ -1,19 +1,22 @@
-from dataclasses import dataclass, field
 import re
+from dataclasses import dataclass, field
+
 import requests
-from geopy.geocoders import Nominatim
+
 from .config import cfg
 from .router_providers import (
-    OSRMProvider,
     MapboxProvider,
+    OSRMProvider,
     RouteProvider,
     build_route_url,
 )
+from .services import nominatim
 
 
 @dataclass
 class RouteResult:
     """Result of an optimized route."""
+
     order: list[str]
     distance_km: float
     duration_min: float
@@ -23,8 +26,10 @@ class RouteResult:
 @dataclass
 class MultiDayPlan:
     """Plan for routes over multiple days."""
+
     daily: dict[int, RouteResult] = field(default_factory=dict)
     canceled: list[str] = field(default_factory=list)
+
 
 def _provider() -> RouteProvider:
     if cfg.routing_provider == "mapbox":
@@ -33,7 +38,6 @@ def _provider() -> RouteProvider:
 
 
 _coord_re = re.compile(r"^-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?$")
-_geocoder = Nominatim(user_agent="smoke-alarm-router")
 
 
 def _geocode(addr: str) -> tuple[float, float]:
@@ -41,10 +45,8 @@ def _geocode(addr: str) -> tuple[float, float]:
     if _coord_re.match(addr.strip()):
         lat, lon = map(float, addr.split(","))
         return lat, lon
-    loc = _geocoder.geocode(addr)
-    if not loc:
-        raise ValueError(f"Address not found: {addr}")
-    return loc.latitude, loc.longitude
+    lat, lon = nominatim.geocode(addr)
+    return lat, lon
 
 
 def optimize_route(addresses: list[str]) -> RouteResult:
@@ -101,6 +103,8 @@ def plan_multi_day_routes(
         else:
             # Single stop – no routing needed
             url = build_route_url(day_addrs)
-            daily[day + 1] = RouteResult(order=day_addrs, distance_km=0, duration_min=0, url=url)
+            daily[day + 1] = RouteResult(
+                order=day_addrs, distance_km=0, duration_min=0, url=url
+            )
 
     return MultiDayPlan(daily=daily, canceled=cancelled)
