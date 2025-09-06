@@ -1,0 +1,14 @@
+﻿services:
+  openhands:
+    image: ghcr.io/all-hands-ai/openhands:latest
+    # Requires Docker Desktop + WSL2 on Windows.
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    ports:
+      - "3000:3000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+    command: >
+      sh -lc "python -m openhands"

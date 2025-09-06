@@ -200,3 +200,6 @@ project details.
  main
  main
  main
+
+[Integrations](docs/integrations.md) • [MegaLinter (manual)](.github/workflows/mega-linter.yml) • [SWE-bench (manual)](.github/workflows/swe-bench-smoke.yml)
+

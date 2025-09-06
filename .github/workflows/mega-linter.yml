@@ -1,0 +1,9 @@
+﻿name: mega-linter
+on:
+  workflow_dispatch:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oxsecurity/megalinter@v7
