@@ -1,1 +1,4 @@
-# Project dependencies
+pytest
+pytest-xdist
+mypy
+ruff
