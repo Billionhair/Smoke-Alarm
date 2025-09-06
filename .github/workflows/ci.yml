@@ -2,11 +2,9 @@
 on:
   pull_request:
   push:
-    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # keep this green and fast; expand later
       - run: echo "ok"
