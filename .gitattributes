@@ -1,10 +1,1 @@
-*.py text eol=lf
-*.js text eol=lf
-*.ts text eol=lf
-*.sh text eol=lf
-* text=auto
- codex/set-up-git-auto-resolve-and-checks
-gui/package-lock.json binary
-
-/gui/package-lock.json binary
- main
+* text=auto eol=lf
